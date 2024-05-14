@@ -1,0 +1,17 @@
+body {
+    background-image: url("../img/act2.jpg");
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+.tituloEj {
+    color: rgb(255, 0, 0);
+    font-size: 3em;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    text-align: center;
+    text-shadow: 2px 2px 2px rgba(248, 0, 0, 0.61);
+}
+
+.btn1 {
+    background-color: #fff3cd;
+}

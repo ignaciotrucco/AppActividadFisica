@@ -1,0 +1,72 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Actividad Fisica</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ActividadFisica.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/sweetalert2.min.css">
+    <link rel="stylesheet" href="~/css/layout.css">
+    <link rel="stylesheet" href="~/fontawesome/css/all.min.css" />
+</head>
+
+<body>
+
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <div class="contenedor-header">
+            <header>
+                <h1><i class="fa-solid fa-medal"></i> Actividad <span class="txtRojo">Física</span></h1>
+                <nav id="nav">
+                    <a href="~/Home/Index"><i class="fa-solid fa-house"></i>  Inicio</a>
+                    <a href="~/TipoEjercicios/TipoEjercicios"><i
+                            class="fa-solid fa-person-running"></i>  Tipo de Ejercicios</a>
+                    <a href="~/EjerciciosFisicos/EjerciciosFisicos"><i
+                            class="fa-solid fa-dumbbell"></i>  Ejercicios Fisicos</a>
+                </nav>
+                <div class="redes">
+                    <partial name="_LoginPartial" />
+                </div>
+                <!-- Icono del menu responsive -->
+                <div id="icono-nav" class="nav-responsive">
+                    <i class="fa-solid fa-bars"></i>
+                </div>
+            </header>
+        </div>
+
+
+        <!-- page content -->
+        <div class="container">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
+
+    }
+
+    else
+    {
+        <div class="container">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
+    }
+
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/sweetalert2.min.js"></script>
+    <script src="~/js/layout.js"></script>
+    <script src="~/fontawesome/js/all.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+</html>

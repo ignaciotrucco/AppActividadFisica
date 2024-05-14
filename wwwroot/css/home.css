@@ -1,0 +1,18 @@
+body {
+    background-image: url("../img/act1.jpg");
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+.tarjeta {
+    border-radius: 30px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: rgba(0, 0, 0, 0.668);
+}
+.hr-gris {
+    border: none; /* Elimina el borde predeterminado */
+    background-color: grey; /* Establece el color gris directamente */
+    height: 1px; /* Establece la altura del HR */
+    margin: 20px 0; /* Margen superior e inferior de 20 píxeles */
+    width: 100%; /* Establece el ancho al 100% del contenedor */
+}
