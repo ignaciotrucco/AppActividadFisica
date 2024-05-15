@@ -42,11 +42,11 @@ function ListadoEjerciciosFisicos() {
 
 function LimpiarModal() {
     document.getElementById("IdEjercicios").value = 0;
-    document.getElementById("TipoEjercicioID").value = "";
+    document.getElementById("TipoEjercicioID").value = 0;
     document.getElementById("fechainicio").value = null;
     document.getElementById("fechafin").value = null;
-    document.getElementById("EstadoEmocionalInicio").value = "";
-    document.getElementById("EstadoEmocionalFin").value = "";
+    document.getElementById("EstadoEmocionalInicio").value = 0;
+    document.getElementById("EstadoEmocionalFin").value = 0;
     document.getElementById("observaciones").value = "";
 }
 
