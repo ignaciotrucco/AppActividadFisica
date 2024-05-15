@@ -71,7 +71,7 @@ function AbrirModalEditar(ejercicioFisicosID) {
             document.getElementById("EstadoEmocionalInicio").value = ejercicioFisico.estadoEmocionalInicio;
             document.getElementById("EstadoEmocionalFin").value = ejercicioFisico.estadoEmocionalFin;
             document.getElementById("observaciones").value = ejercicioFisico.observaciones;
-            
+
             $("#ModalEjerciciosFisicos").modal("show");
 
         },
@@ -87,7 +87,7 @@ function AbrirModalEditar(ejercicioFisicosID) {
 
 function GuardarRegistro() {
     //GUARDO EN UNA VARIABLE LOS DATOS DE LOS INPUTS
-    
+
     let ejercicioFisicoID = document.getElementById("IdEjercicios").value;
     let tipoEjercicioID = document.getElementById("TipoEjercicioID").value;
     let inicio = document.getElementById("fechainicio").value;
@@ -95,44 +95,59 @@ function GuardarRegistro() {
     let estadoEmocionalInicio = document.getElementById("EstadoEmocionalInicio").value;
     let estadoEmocionalFin = document.getElementById("EstadoEmocionalFin").value;
     let observaciones = document.getElementById("observaciones").value;
-    
-    $.ajax({
-        //URL PARA PETICION
-        url: '../../EjerciciosFisicos/GuardarEjerciciosFisicos',
-        // la información a enviar
-        // (también es posible utilizar una cadena de datos)
-        data: {
-            ejercicioFisicoID: ejercicioFisicoID,
-            tipoEjercicioID: tipoEjercicioID,
-            inicio: inicio,
-            fin: fin,
-            estadoEmocionalInicio: estadoEmocionalInicio,
-            estadoEmocionalFin: estadoEmocionalFin,
-            observaciones: observaciones
-        },
-        //especifico peticion tipo POST
-        type: 'POST',
-        //info que se espera de respuesta
-        dataType: 'json',
-        // código a ejecutar si la petición es satisfactoria;
-        // la respuesta es pasada como argumento a la función
-        success: function (resultado) {
-            if (resultado != "") {
-                Swal.fire(resultado);
-            }
-            ListadoEjerciciosFisicos();
-        },
-        // código a ejecutar si la petición falla;
-        // son pasados como argumentos a la función
-        // el objeto de la petición en crudo y código de estatus de la petición
-        error: function (xhr, status) {
-            Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                text: "Algo salió mal",
+
+    Swal.fire({
+        title: "¿Está seguro que quiere guardar este registro?",
+        showDenyButton: true,
+        confirmButtonText: "Guardar",
+        denyButtonText: `No guardar`
+    }).then((result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+            $.ajax({
+                //URL PARA PETICION
+                url: '../../EjerciciosFisicos/GuardarEjerciciosFisicos',
+                // la información a enviar
+                // (también es posible utilizar una cadena de datos)
+                data: {
+                    ejercicioFisicoID: ejercicioFisicoID,
+                    tipoEjercicioID: tipoEjercicioID,
+                    inicio: inicio,
+                    fin: fin,
+                    estadoEmocionalInicio: estadoEmocionalInicio,
+                    estadoEmocionalFin: estadoEmocionalFin,
+                    observaciones: observaciones
+                },
+                //especifico peticion tipo POST
+                type: 'POST',
+                //info que se espera de respuesta
+                dataType: 'json',
+                // código a ejecutar si la petición es satisfactoria;
+                // la respuesta es pasada como argumento a la función
+                success: function (resultado) {
+                    if (resultado != "") {
+                        Swal.fire(resultado);
+                    }
+                    ListadoEjerciciosFisicos();
+                },
+                // código a ejecutar si la petición falla;
+                // son pasados como argumentos a la función
+                // el objeto de la petición en crudo y código de estatus de la petición
+                error: function (xhr, status) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "Algo salió mal",
+                    });
+                }
             });
+        } else if (result.isDenied) {
+            Swal.fire("El elemento no ha sido guardado", "", "info");
+            ListadoEjerciciosFisicos();
         }
     });
+
+
 
 }
 

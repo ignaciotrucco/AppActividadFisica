@@ -75,8 +75,8 @@ public class EjerciciosFisicosController : Controller
                 EjercicioFisicoID = ejercicioFisico.EjercicioFisicoID,
                 TipoEjercicioID = ejercicioFisico.TipoEjercicioID,
                 TipoEjercicioDescripcion = tipoEjercicio.Descripcion,
-                FechaInicioString = ejercicioFisico.Inicio.ToString("dd/MM/yyyy HH:mm"),
-                FechaFinString = ejercicioFisico.Fin.ToString("dd/MM/yyyy HH:mm"),
+                FechaInicioString = ejercicioFisico.Inicio.ToString("dd/MM/yyyy, HH:mm"),
+                FechaFinString = ejercicioFisico.Fin.ToString("dd/MM/yyyy, HH:mm"),
                 EstadoEmocionalInicio = Enum.GetName(typeof(EstadoEmocional), ejercicioFisico.EstadoEmocionalInicio),
                 EstadoEmocionalFin = Enum.GetName(typeof(EstadoEmocional), ejercicioFisico.EstadoEmocionalFin),
                 Observaciones = ejercicioFisico.Observaciones

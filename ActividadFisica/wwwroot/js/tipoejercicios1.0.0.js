@@ -106,35 +106,49 @@ function GuardarRegistro() {
     //POR UN LADO PROGRAMAR VERIFICACIONES DE DATOS EN EL FRONT CUANDO SON DE INGRESO DE VALORES Y NO SE NECESITA VERIFICAR EN BASES DE DATOS
     //LUEGO POR OTRO LADO HACER VERIFICACIONES DE DATOS EN EL BACK, SI EXISTE EL ELEMENTO SI NECESITAMOS LA BASE DE DATOS.
     console.log(descripcion);
-    $.ajax({
-        //URL PARA PETICION
-        url: '../../TipoEjercicios/GuardarTipoEjercicios',
-        // la información a enviar
-        // (también es posible utilizar una cadena de datos)
-        data: { tipoEjercicioID: tipoEjercicioID, descripcion: descripcion },
-        //especifico peticion tipo POST
-        type: 'POST',
-        //info que se espera de respuesta
-        dataType: 'json',
-        // código a ejecutar si la petición es satisfactoria;
-        // la respuesta es pasada como argumento a la función
-        success: function (resultado) {
-            if (resultado != "") {
-                Swal.fire(resultado);
-            }
-            ListadoTipoEjercicios();
-        },
-        // código a ejecutar si la petición falla;
-        // son pasados como argumentos a la función
-        // el objeto de la petición en crudo y código de estatus de la petición
-        error: function (xhr, status) {
-            Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                text: "Algo salió mal",
+    Swal.fire({
+        title: "¿Está seguro que quiere guardar este registro?",
+        showDenyButton: true,
+        confirmButtonText: "Guardar",
+        denyButtonText: `No guardar`
+    }).then((result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+            $.ajax({
+                //URL PARA PETICION
+                url: '../../TipoEjercicios/GuardarTipoEjercicios',
+                // la información a enviar
+                // (también es posible utilizar una cadena de datos)
+                data: { tipoEjercicioID: tipoEjercicioID, descripcion: descripcion },
+                //especifico peticion tipo POST
+                type: 'POST',
+                //info que se espera de respuesta
+                dataType: 'json',
+                // código a ejecutar si la petición es satisfactoria;
+                // la respuesta es pasada como argumento a la función
+                success: function (resultado) {
+                    if (resultado != "") {
+                        Swal.fire(resultado);
+                    }
+                    ListadoTipoEjercicios();
+                },
+                // código a ejecutar si la petición falla;
+                // son pasados como argumentos a la función
+                // el objeto de la petición en crudo y código de estatus de la petición
+                error: function (xhr, status) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "Algo salió mal",
+                    });
+                }
             });
+        } else if (result.isDenied) {
+            Swal.fire("El elemento no ha sido guardado", "", "info");
+            ListadoTipoEjercicios();
         }
     });
+
 }
 
 function EliminarRegistros(tipoEjercicioID) {
