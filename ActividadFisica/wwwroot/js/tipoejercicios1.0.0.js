@@ -177,7 +177,15 @@ function EliminarRegistros(tipoEjercicioID) {
                 // código a ejecutar si la petición es satisfactoria;
                 // la respuesta es pasada como argumento a la función
                 success: function (resultado) {
-                    if (resultado) {
+                    if (!resultado) {
+                        Swal.fire({
+                            title: "Oops...!",
+                            text: "Este registro no se puede eliminar porque ya existe en otra tabla",
+                            icon: "error"
+                        });
+                        ListadoTipoEjercicios();
+                    }
+                    else {
                         Swal.fire({
                             title: "¡Hecho!",
                             text: "Su registro ha sido eliminado.",
