@@ -1,27 +1,18 @@
 @{
-    ViewData["Title"] = "Ejercicios Fisicos";
+  ViewData["Title"] = "Ejercicios Fisicos";
 }
 
 <link rel="stylesheet" href="~/css/tipoEjercicios.css">
 
 <div class="text-center">
-    <h1 class="display-4 tituloEj mt-2">Ejercicios Fisicos</h1>
-</div>
-
-<!-- Button trigger modal -->
-<div class="mb-2">
-    <button type="button" onclick="ListadoEjerciciosFisicos()" class="btn btn-outline-danger">
-    <i class="fa-solid fa-arrows-rotate"></i> Refrescar Datos
-    </button>
-    <button type="button" onclick="NuevoRegistro()" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#ModalEjerciciosFisicos">
-    <i class="fa-solid fa-plus"></i> Nuevo Registro
-    </button>
+  <h1 class="display-4 tituloEj mt-2">Ejercicios Fisicos</h1>
 </div>
 
 
 
 <!-- Modal -->
-<div class="modal fade" id="ModalEjerciciosFisicos" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="ModalEjerciciosFisicos" tabindex="-1" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
@@ -29,68 +20,103 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-      <form>
-        <div class="row">
-          <input type="hidden" id="IdEjercicios" value="0">
-          <div>
-            <label for="TipoEjercicioID" class="form-label">Tipo de Ejercicio</label>
-            @Html.DropDownList("TipoEjercicioID", null, htmlAttributes: new { @class = "form-control" })
-          </div>
-
-          <div class="row mt-3">
-              <div class="col-md-6 ms-auto"><label for="fechainicio" class="form-label">Fecha de inicio</label>
-              <input type="datetime-local" id="fechainicio" class="form-control"></div>
-              <div class="col-md-6 ms-auto"><label for="fechafin" class="form-label">Fecha de fin</label>
-              <input type="datetime-local" id="fechafin" class="form-control"></div>
-          </div>
-
-          <div class="row mt-3">
-            <div class="col-md-6 ms-auto">
-              <label for="EstadoEmocionalInicio" class="form-label">Estado Emocional al Inicio</label>
-              @Html.DropDownList("EstadoEmocionalInicio", null, htmlAttributes: new { @class = "form-control" })
+        <form>
+          <div class="row">
+            <input type="hidden" id="IdEjercicios" value="0">
+            <div>
+              <label for="TipoEjercicioID" class="form-label">Tipo de Ejercicio</label>
+              @Html.DropDownList("TipoEjercicioID", null, htmlAttributes: new { @class = "form-control" })
             </div>
 
-            <div class="col-md-6 ms-auto">
-              <label for="EstadoEmocionalFin" class="form-label">Estado Emocional al Final</label>
-              @Html.DropDownList("EstadoEmocionalFin", null, htmlAttributes: new { @class = "form-control" })
+            <div class="row mt-3">
+              <div class="col-md-6 ms-auto"><label for="fechainicio" class="form-label">Fecha de inicio</label>
+                <input type="datetime-local" id="fechainicio" class="form-control">
               </div>
-          </div>
+              <div class="col-md-6 ms-auto"><label for="fechafin" class="form-label">Fecha de fin</label>
+                <input type="datetime-local" id="fechafin" class="form-control">
+              </div>
+            </div>
 
-          <div>
-          <label for="observaciones" class="form-label mt-3">Observaciones</label>
-          <input type="text" class="form-control" id="observaciones" style="text-transform:uppercase" placeholder="¿Como te sentiste?">
+            <div class="row mt-3">
+              <div class="col-md-6 ms-auto">
+                <label for="EstadoEmocionalInicio" class="form-label">Estado Emocional al Inicio</label>
+                @Html.DropDownList("EstadoEmocionalInicio", null, htmlAttributes: new { @class = "form-control" })
+              </div>
+
+              <div class="col-md-6 ms-auto">
+                <label for="EstadoEmocionalFin" class="form-label">Estado Emocional al Final</label>
+                @Html.DropDownList("EstadoEmocionalFin", null, htmlAttributes: new { @class = "form-control" })
+              </div>
+            </div>
+
+            <div>
+              <label for="observaciones" class="form-label mt-3">Observaciones</label>
+              <input type="text" class="form-control" id="observaciones" style="text-transform:uppercase"
+                placeholder="¿Como te sentiste?">
+            </div>
           </div>
-        </div>
-      </form>
+        </form>
       </div>
       <div class="modal-footer">
-        <button type="button" onclick="LimpiarModal()" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" onclick="LimpiarModal()" class="btn btn-secondary"
+          data-bs-dismiss="modal">Cancelar</button>
         <button type="button" onclick="GuardarRegistro()" class="btn btn-primary">Guardar</button>
       </div>
     </div>
   </div>
 </div>
 
+<div class="row m-3">
+  <div class="col-md-2">
+    <label for="fechadesde" class="form-label text-light">Fecha desde</label>
+    <input type="datetime-local" id="FechaDesde" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd HH:mm")" />
+  </div>
+  <div class="col-md-2">
+    <label for="fechahasta" class="form-label text-light">Fecha hasta</label>
+    <input type="datetime-local" id="FechaHasta" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd HH:mm")" />
+  </div>
+  <div class="col-md-2">
+    <label for="TipoEjercicioBuscarID" class="form-label text-light">Tipo de Ejercicio</label>
+    @Html.DropDownList("TipoEjercicioBuscarID", null, htmlAttributes: new { @class = "form-control" })
+  </div>
+  <div class="col-md-2 mt-4">
+    <button type="button" onclick="ListadoEjerciciosFisicos()" class="btn btn-outline-primary">
+      <i class="fa-solid fa-magnifying-glass"></i> Buscar
+    </button>
+  </div>
+</div>
+
+<!-- Button trigger modal -->
+<div class="mb-2">
+  <button type="button" onclick="ListadoEjerciciosFisicos()" class="btn btn-outline-danger">
+    <i class="fa-solid fa-arrows-rotate"></i> Refrescar Datos
+  </button>
+  <button type="button" onclick="NuevoRegistro()" class="btn btn-outline-danger" data-bs-toggle="modal"
+    data-bs-target="#ModalEjerciciosFisicos">
+    <i class="fa-solid fa-plus"></i> Nuevo Registro
+  </button>
+</div>
+
 
 
 <table class="table table-dark table-bordered table-striped">
-    <thead>
-        <tr>
-            <th class="text-center">Tipo de ejercicio</th>
-            <th class="text-center">Fecha de inicio</th>
-            <th class="text-center">Fecha de fin</th>
-            <th class="text-center">Estado emocional al inicio</th>
-            <th class="text-center">Estado emocional al final</th>
-            <th class="text-center">Observaciones</th>      
-            <th style="width: 40px"></th>
-            <th style="width: 40px"></th>
-        </tr>
-    </thead>
-    <tbody id="tbody-ejerciciosfisicos"></tbody>
+  <thead>
+    <tr>
+      <th class="text-center">Tipo de ejercicio</th>
+      <th class="text-center">Fecha de inicio</th>
+      <th class="text-center">Fecha de fin</th>
+      <th class="text-center">Estado emocional al inicio</th>
+      <th class="text-center">Estado emocional al final</th>
+      <th class="text-center">Observaciones</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="tbody-ejerciciosfisicos"></tbody>
 </table>
 
 
 
-@section Scripts{
-    <script src="~/js/ejerciciosfisicos1.0.0.js"></script>
+@section Scripts {
+  <script src="~/js/ejerciciosfisicos1.0.0.js"></script>
 }

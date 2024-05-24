@@ -43,13 +43,17 @@ public class EjerciciosFisicosController : Controller
         ViewBag.EstadoEmocionalFin = selectListItems.OrderBy(t => t.Text).ToList();
 
         var tipoEjercicios = _context.Tipo_Ejercicios.ToList();
+        var tipoEjercicioBuscar = _context.Tipo_Ejercicios.ToList();
         tipoEjercicios.Add(new Tipo_Ejercicio { TipoEjercicioID = 0, Descripcion = "[SELECCIONE...]" });
         ViewBag.TipoEjercicioID = new SelectList(tipoEjercicios.OrderBy(c => c.Descripcion), "TipoEjercicioID", "Descripcion");
+
+        tipoEjercicioBuscar.Add(new Tipo_Ejercicio { TipoEjercicioID = 0, Descripcion = "[Tipos de ejercicios]" });
+        ViewBag.TipoEjercicioBuscarID = new SelectList(tipoEjercicioBuscar.OrderBy(c => c.Descripcion), "TipoEjercicioID", "Descripcion");
 
         return View();
     }
 
-    public JsonResult ListadoEjerciciosFisicos(int? ejercicioFisicosID)
+    public JsonResult ListadoEjerciciosFisicos(int? ejercicioFisicosID, DateTime? FechaDesde, DateTime? FechaHasta, int? TipoEjercicioBuscar)
     {
         List<VistaEjercicioFisico> ejerciciosFisicosMostrar = new List<VistaEjercicioFisico>();
 
@@ -62,6 +66,15 @@ public class EjerciciosFisicosController : Controller
         {
             //FILTRAMOS CADA EJERCICIO POR ID PARA QUE COINCIDAN
             ejerciciosFisicos = ejerciciosFisicos.Where(l => l.EjercicioFisicoID == ejercicioFisicosID).ToList();
+        }
+
+        if (FechaDesde != null && FechaHasta != null)
+        {
+            ejerciciosFisicos = ejerciciosFisicos.Where(e => e.Inicio >= FechaDesde && e.Inicio <= FechaHasta).ToList();
+        }
+        if (TipoEjercicioBuscar != null)
+        {
+            ejerciciosFisicos = ejerciciosFisicos.Where(e => e.TipoEjercicioID == TipoEjercicioBuscar).ToList();
         }
 
         var tiposEjercicios = _context.Tipo_Ejercicios.ToList();
@@ -87,7 +100,8 @@ public class EjerciciosFisicosController : Controller
         return Json(ejerciciosFisicosMostrar);
     }
 
-    public JsonResult LlamarDatosAlModal(int? ejercicioFisicoID) {
+    public JsonResult LlamarDatosAlModal(int? ejercicioFisicoID)
+    {
         var ejercicioFisico = _context.EjercicioFisico.ToList();
 
         if (ejercicioFisicoID != null)

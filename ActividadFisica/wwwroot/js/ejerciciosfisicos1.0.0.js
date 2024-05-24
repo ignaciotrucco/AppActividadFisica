@@ -1,9 +1,16 @@
 window.onload = ListadoEjerciciosFisicos();
 
 function ListadoEjerciciosFisicos() {
+    let fechadesde = document.getElementById("FechaDesde").value;
+    let fechahasta = document.getElementById("FechaHasta").value;
+    let tipoEjercicioBuscar = document.getElementById("TipoEjercicioBuscarID").value;
     $.ajax({
         url: '../../EjerciciosFisicos/ListadoEjerciciosFisicos',
-        data: {},
+        data: {
+            FechaDesde: fechadesde,
+            FechaHasta: fechahasta,
+            TipoEjercicioBuscar: tipoEjercicioBuscar
+        },
         type: 'POST',
         dataType: 'json',
         success: function (ejerciciosFisicoMostrar) {
