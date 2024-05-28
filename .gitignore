@@ -1,4 +1,4 @@
 bin/
 obj/
-\.vs
-\ActividadFisica\.vs
+\.vscode
+\ActividadFisica\.vscode
