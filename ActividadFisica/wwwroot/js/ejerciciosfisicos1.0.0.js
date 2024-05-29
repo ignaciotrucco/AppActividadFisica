@@ -1,5 +1,45 @@
 window.onload = ListadoEjerciciosFisicos();
 
+// function ListadoEjerciciosFisicos() {
+//     $.ajax({
+//         url: '../../EjerciciosFisicos/ListadoEjerciciosFisicos',
+//         data: { },
+//         type: 'POST',
+//         dataType: 'json',
+//         success: function (ejerciciosFisicoMostrar) {
+
+//             $("#ModalEjerciciosFisicos").modal("hide");
+//             LimpiarModal();
+
+//             let contenidoTabla = ``;
+
+//             $.each(ejerciciosFisicoMostrar, function (index, ejerciciosFisicoMostrar) {
+//                 contenidoTabla += `
+//                 <tr>
+//                     <td>${ejerciciosFisicoMostrar.tipoEjercicioDescripcion}</td>
+//                     <td>${ejerciciosFisicoMostrar.fechaInicioString}</td>
+//                     <td>${ejerciciosFisicoMostrar.fechaFinString}</td>
+//                     <td>${ejerciciosFisicoMostrar.estadoEmocionalInicio}</td>
+//                     <td>${ejerciciosFisicoMostrar.estadoEmocionalFin}</td>
+//                     <td>${ejerciciosFisicoMostrar.observaciones}</td>
+//                     <td class="text-center"><button type="button" class="btn btn-success" onclick="AbrirModalEditar(${ejerciciosFisicoMostrar.ejercicioFisicoID})"><i class="fa-solid fa-pen-to-square"></i></button></td>
+//                     <td class="text-center"><button type="button" class="btn btn-danger" onclick="EliminarEjercicio(${ejerciciosFisicoMostrar.ejercicioFisicoID})"><i class="fa-solid fa-trash"></i></button></td>
+//                 </tr>
+//                 `;
+//             });
+//             document.getElementById("tbody-ejerciciosfisicos").innerHTML = contenidoTabla;
+//         },
+
+//         error: function (xhr, status) {
+//             Swal.fire({
+//                 icon: "error",
+//                 title: "Oops...",
+//                 text: "Algo salió mal",
+//             });
+//         }
+//     });
+// }
+
 function ListadoEjerciciosFisicos() {
     let fechadesde = document.getElementById("FechaDesde").value;
     let fechahasta = document.getElementById("FechaHasta").value;

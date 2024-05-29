@@ -68,11 +68,14 @@ public class EjerciciosFisicosController : Controller
             ejerciciosFisicos = ejerciciosFisicos.Where(l => l.EjercicioFisicoID == ejercicioFisicosID).ToList();
         }
 
+        //CONDICION PARA QUE FILTRE POR FECHA
         if (FechaDesde != null && FechaHasta != null)
         {
             ejerciciosFisicos = ejerciciosFisicos.Where(e => e.Inicio >= FechaDesde && e.Inicio <= FechaHasta).ToList();
         }
-        if (TipoEjercicioBuscar != null)
+
+        //CONDICION PARA QUE FILTRE POR TIPO DE EJERCICIO
+        if (TipoEjercicioBuscar != 0)
         {
             ejerciciosFisicos = ejerciciosFisicos.Where(e => e.TipoEjercicioID == TipoEjercicioBuscar).ToList();
         }
