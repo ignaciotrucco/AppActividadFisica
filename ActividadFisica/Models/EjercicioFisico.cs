@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ActividadFisica.Models
 {
@@ -9,10 +10,13 @@ namespace ActividadFisica.Models
         public int TipoEjercicioID { get; set; }
         public DateTime Inicio { get; set; }
         public DateTime Fin { get; set; }
+        
+        [NotMapped]
+        public TimeSpan IntervaloEjercicio { get { return Fin - Inicio; } }
         public EstadoEmocional EstadoEmocionalInicio { get; set; }
         public EstadoEmocional EstadoEmocionalFin { get; set; }
         public string? Observaciones { get; set; }
-        public virtual Tipo_Ejercicio TipoEjercicio { get; set; } 
+        public virtual Tipo_Ejercicio TipoEjercicio { get; set; }
     }
 
     public enum EstadoEmocional
