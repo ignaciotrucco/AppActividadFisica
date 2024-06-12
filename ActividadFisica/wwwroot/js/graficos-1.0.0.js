@@ -25,9 +25,12 @@ function GraficoRedondo() {
 
             var labels = [];
             var data = [];
+            var fondo = [];
 
             $.each(vistaTipoEjercicios, function(index, vistaTipoEjercicio) {
                 labels.push(vistaTipoEjercicio.descripcion);
+                var color = GenerarColorRojo();
+                fondo.push(color);
                 data.push(vistaTipoEjercicio.cantidadMinutos);
             });
 
@@ -38,11 +41,7 @@ function GraficoRedondo() {
                     labels: labels,
                     datasets: [{
                         data: data,
-                        backgroundColor: [
-                            'rgb(255, 99, 132)',
-                            'rgb(54, 162, 235)',
-                            'rgb(255, 205, 86)'
-                        ],
+                        backgroundColor: fondo,
                     }]
                 },
             });
@@ -115,20 +114,21 @@ function GraficoBarraEjercicios() {
             //OBTENER EL TEXTO DE LA OPCION SELECCIONADA
             var ejerciciosNombre = inputTipoEjercicioId.options[inputTipoEjercicioId.selectedIndex].text;
 
-            let diasSinEjercicios = ejerciciosPorDia.lenght - diasConEjercicios;
-            // document.getElementById("").text(minutosTotales + " MINUTOS EN " + diasConEjercicios + " DÍAS");
-            // document.getElementById("").text(diasSinEjercicios + " DÍAS SIN " + ejerciciosNombre);
+            let diasSinEjercicios = ejerciciosPorDia.length - diasConEjercicios;
+            $("#textoTotalEjercicios").html(minutosTotales + " MINUTOS EN " + diasConEjercicios + " DÍAS " + '       <i class="fa-solid fa-square-check"></i>');
+            $("#textoSinEjercicios").html(diasSinEjercicios + " DÍAS SIN " + ejerciciosNombre + '         <i class="fa-solid fa-xmark"></i>');
 
             //INICIO GRAFICO DE BARRAS
             const ctx = document.getElementById('GraficoBarras');
             graficoBarras = new Chart(ctx, {
-                type: 'bar',
+                type: 'line',
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Cantidad de minutos',
+                        label: 'CANTIDAD DE MINUTOS',
                         data: data,
-                        borderWidth: 2
+                        borderWidth: 2,
+                        borderColor: "rgb(255, 0, 0)",
                     }]
                 },
                 options: {
@@ -152,3 +152,17 @@ function GraficoBarraEjercicios() {
         }
     });
 }
+
+function GenerarColorRojo() {
+    // El valor de RR será alto (de 128 a 255) para garantizar que predomine el rojo.
+    // Los valores de GG y BB serán muy bajos (de 0 a 63).
+
+    let rr = Math.floor(Math.random() * 128) + 128; // 128 a 255
+    let gg = Math.floor(Math.random() * 64); // 0 a 63
+    let bb = Math.floor(Math.random() * 64); // 0 a 63
+
+    // Convertimos a hexadecimal y formateamos para que tenga siempre dos dígitos.
+    let colorHex = `#${rr.toString(16).padStart(2, '0')}${gg.toString(16).padStart(2, '0')}${bb.toString(16).padStart(2, '0')}`;
+    return colorHex;
+}
+
