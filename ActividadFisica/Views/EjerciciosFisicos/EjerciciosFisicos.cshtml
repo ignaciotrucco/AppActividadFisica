@@ -77,26 +77,32 @@
     aria-controls="collapseExample">
     <i class="fa-solid fa-circle-down"></i> ¡Filtrá por los datos que quieras!
   </a>
+  <button class="btn btn-danger" onclick="ImprimirEjerciciosFisicos()">Imprimir!</button>
 </div>
 
 <div class="mb-2 collapse" id="collapseExample">
   <div class="card card-body bg-dark">
     <div class="row">
       <div class="col-md-2">
-        <label for="fechadesde" class="form-label text-light">Fecha desde</label>
+        <label for="FechaDesde" class="form-label text-light">Fecha desde</label>
         <input type="datetime-local" id="FechaDesde" class="form-control" />
       </div>
       <div class="col-md-2">
-        <label for="fechahasta" class="form-label text-light">Fecha hasta</label>
+        <label for="FechaHasta" class="form-label text-light">Fecha hasta</label>
         <input type="datetime-local" id="FechaHasta" class="form-control" />
       </div>
       <div class="col-md-2">
         <label for="TipoEjercicioBuscarID" class="form-label text-light">Tipo de Ejercicio</label>
         @Html.DropDownList("TipoEjercicioBuscarID", null, htmlAttributes: new { @class = "form-control" })
       </div>
-      <div class="col-md-2 mt-4">
+      <div class="col-md-2 mt-3">
         <button type="button" onclick="ListadoEjerciciosFisicos()" class="btn btn-outline-danger">
           <i class="fa-solid fa-magnifying-glass"></i> Buscar
+        </button>
+      </div>
+      <div class="col-md-2 mt-3">
+        <button type="button" onclick="LimpiarFiltros()" class="btn btn-outline-danger">
+          <i class="fa-solid fa-magnifying-glass"></i> Limpiar
         </button>
       </div>
     </div>
@@ -104,14 +110,14 @@
 </div>
 
 
-<table class="table table-dark table-bordered table-striped">
+<table class="table table-dark table-bordered table-striped" id="imprimir-tabla">
   <thead>
     <tr>
-      <th class="text-center">Tipo de ejercicio</th>
-      <th class="text-center">Fecha de inicio</th>
-      <th class="text-center">Fecha de fin</th>
-      <th class="text-center">Estado emocional al inicio</th>
-      <th class="text-center">Estado emocional al final</th>
+      <th class="text-center">Tipo de Ejercicio</th>
+      <th class="text-center">Fecha Inicio</th>
+      <th class="text-center">Estado Emocional</th>
+      <th class="text-center">Fecha Fin</th>
+      <th class="text-center">Estado Emocional</th>
       <th class="text-center">Observaciones</th>
       <th></th>
       <th></th>
@@ -124,4 +130,111 @@
 
 @section Scripts {
   <script src="~/js/ejerciciosfisicos1.0.0.js"></script>
+  <script>
+    
+    // Configura el tamaño de la página, por ejemplo, un ancho de 297 mm (A3 horizontal)
+    let anchoAmpliado = new jsPDF('landscape', 'mm', [210, 297]);// Landscape A4 (210mm x 297mm)
+    
+    function ImprimirEjerciciosFisicos() {
+      var doc = anchoAmpliado;
+
+      var totalPagesExp = "{total_pages_count_string}";
+      var pageContent = function (data) {
+
+        var pageHeight = doc.internal.pageSize.height || doc.internal.pageSize.getHeight();
+        var pageWidth = doc.internal.pageSize.width || doc.internal.pageSize.getWidth();
+
+        // FOOTER
+        var str = "Página " + data.pageCount;
+        if (typeof doc.putTotalPages == 'function') {
+          str = str + " de " + totalPagesExp;
+        }
+
+        // ESTABLECER ANCHO DE LÍNEA
+        doc.setLineWidth(8);
+
+        // ESTABLECER COLOR DE LÍNEA
+        doc.setDrawColor(238, 238, 238);
+
+        // DIBUJAR UNA LÍNEA HORIZONTAL
+        doc.line(14, pageHeight - 11, pageWidth - 14, pageHeight - 11);
+
+        // ESTABLECER TAMAÑO DE FUENTE
+        doc.setFontSize(10);
+
+        // ESTABLECER ESTILO DE FUENTE A NEGRITA
+        doc.setFontStyle('bold');
+
+        // AGREGAR TEXTO AL PIE DE PÁGINA
+        doc.text(str, 17, pageHeight - 10);
+      };
+
+      // Agregar título y fecha a la primera página
+      doc.setFontSize(18);
+      doc.setFontStyle('bold');
+      doc.text('Listado de ejercicios', 14, 22);
+
+      var element = document.getElementById("imprimir-tabla");
+
+      // CONVERTIR TABLA HTML A JSON
+      var res = doc.autoTableHtmlToJson(element);
+
+      // FILTRADO DE COLUMNAS QUE NO SE QUIERE MOSTRAR
+      const filtrarColumnas = res.columns.filter((_, index) => index !== 6 && index !== 7);
+      const filtrarData = res.data.map(row => row.filter((_, index) => index !== 6 && index !== 7));
+
+      doc.autoTable(filtrarColumnas, filtrarData, {
+        addPageContent: pageContent,
+        theme: 'grid',
+        styles: { fillColor: [50, 50, 50] }, // Gris oscuro 
+        columnStyles: {
+          0: {
+            cellWidth: 'wrap',
+            fontSize: 8,
+            fillColor: [255, 255, 255]
+          },
+          1: {
+            cellWidth: 'wrap',
+            fontSize: 7,
+            overflow: 'linebreak',
+            fillColor: [255, 255, 255]
+          },
+          2: {
+            cellWidth: 'wrap',
+            fontSize: 7,
+            fillColor: [255, 255, 255]
+          },
+          3: {
+            cellWidth: 'wrap',
+            fontSize: 7,
+            fillColor: [255, 255, 255]
+          },
+          4: {
+            cellWidth: 'wrap',
+            fontSize: 7,
+            fillColor: [255, 255, 255]
+          },
+          5: {
+            cellWidth: 'wrap',
+            fontSize: 7,
+            fillColor: [255, 255, 255]
+          },
+        },
+        margin: { top: 30 } // Ajusta el margen superior para el título
+      });
+
+      if (typeof doc.putTotalPages === 'function') {
+        doc.putTotalPages(totalPagesExp);
+      }
+
+      var string = doc.output('datauristring');
+      var iframe = "<iframe width='100%' height='100%' src='" + string + "'></iframe>"
+
+      var x = window.open();
+      x.document.open();
+      x.document.write(iframe);
+      x.document.close();
+    }
+  </script>
+
 }

@@ -39,6 +39,11 @@ window.onload = ListadoEjerciciosFisicos();
 //         }
 //     });
 // }
+function LimpiarFiltros() {
+    $("#TipoEjercicioBuscarID").val(0);
+    $("#FechaDesde").val("");
+    $("#FechaHasta").val("");
+}
 
 function ListadoEjerciciosFisicos() {
     let fechadesde = document.getElementById("FechaDesde").value;
@@ -63,11 +68,11 @@ function ListadoEjerciciosFisicos() {
             $.each(ejerciciosFisicoMostrar, function (index, ejerciciosFisicoMostrar) {
                 contenidoTabla += `
                 <tr>
-                    <td>${ejerciciosFisicoMostrar.tipoEjercicioDescripcion}</td>
-                    <td>${ejerciciosFisicoMostrar.fechaInicioString}</td>
-                    <td>${ejerciciosFisicoMostrar.fechaFinString}</td>
-                    <td>${ejerciciosFisicoMostrar.estadoEmocionalInicio}</td>
-                    <td>${ejerciciosFisicoMostrar.estadoEmocionalFin}</td>
+                    <td class="text-center">${ejerciciosFisicoMostrar.tipoEjercicioDescripcion}</td>
+                    <td class="text-center">${ejerciciosFisicoMostrar.fechaInicioString}</td>
+                    <td class="text-center">${ejerciciosFisicoMostrar.estadoEmocionalInicio}</td>
+                    <td class="text-center">${ejerciciosFisicoMostrar.fechaFinString}</td>
+                    <td class="text-center">${ejerciciosFisicoMostrar.estadoEmocionalFin}</td>
                     <td>${ejerciciosFisicoMostrar.observaciones}</td>
                     <td class="text-center"><button type="button" class="btn btn-success" onclick="AbrirModalEditar(${ejerciciosFisicoMostrar.ejercicioFisicoID})"><i class="fa-solid fa-pen-to-square"></i></button></td>
                     <td class="text-center"><button type="button" class="btn btn-danger" onclick="EliminarEjercicio(${ejerciciosFisicoMostrar.ejercicioFisicoID})"><i class="fa-solid fa-trash"></i></button></td>
