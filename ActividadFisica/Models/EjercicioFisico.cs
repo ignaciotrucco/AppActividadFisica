@@ -10,7 +10,7 @@ namespace ActividadFisica.Models
         public int TipoEjercicioID { get; set; }
         public DateTime Inicio { get; set; }
         public DateTime Fin { get; set; }
-        
+
         [NotMapped]
         public TimeSpan IntervaloEjercicio { get { return Fin - Inicio; } }
         public EstadoEmocional EstadoEmocionalInicio { get; set; }
@@ -41,16 +41,27 @@ namespace ActividadFisica.Models
         Desanimado
     }
 
+    public class VistaNombreEjercicio
+    {
+        public int TipoEjercicioID { get; set; }
+        public string? TipoEjercicioDescripcion { get; set; }
+        public int EjercicioFisicoID { get; set; }
+        public List<VistaEjercicioFisico>? VistaEjercicioFisico { get; set; }
+    }
+
     public class VistaEjercicioFisico
     {
         public int EjercicioFisicoID { get; set; }
         public int TipoEjercicioID { get; set; }
         public string? TipoEjercicioDescripcion { get; set; }
+        public DateTime Inicio { get; set; }
+        public DateTime Fin { get; set; }
         public string FechaInicioString { get; set; }
         public string FechaFinString { get; set; }
         public string? EstadoEmocionalInicio { get; set; }
         public string? EstadoEmocionalFin { get; set; }
         public string? Observaciones { get; set; }
+        public TimeSpan IntervaloEjercicio { get; set; }
     }
 
     public class VistaSumaEjercicioFisico

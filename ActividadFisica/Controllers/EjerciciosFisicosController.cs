@@ -52,6 +52,10 @@ public class EjerciciosFisicosController : Controller
 
         return View();
     }
+    public IActionResult InformeEjerciciosFisicos()
+    {
+        return View();
+    }
 
     public JsonResult ListadoEjerciciosFisicos(int? ejercicioFisicosID, DateTime? FechaDesde, DateTime? FechaHasta, int? TipoEjercicioBuscar)
     {
@@ -177,4 +181,88 @@ public class EjerciciosFisicosController : Controller
 
         return Json(true);
     }
+
+    public JsonResult ListadoInformeEjerciciosFisicos(DateTime? FechaDesde, DateTime? FechaHasta)
+    {
+         List<VistaNombreEjercicio> informeEjerciciosFisicosMostrar = new List<VistaNombreEjercicio>();
+
+         var listadoInformeEjerciciosFisicos = _context.EjercicioFisico.Include(l => l.TipoEjercicio).OrderBy(l => l.TipoEjercicio.Descripcion).ToList();
+
+         if (FechaDesde != null && FechaHasta != null)
+        {
+            listadoInformeEjerciciosFisicos = listadoInformeEjerciciosFisicos.Where(e => e.Inicio >= FechaDesde && e.Inicio <= FechaHasta).ToList();
+        }
+
+         foreach (var listadoInforme in listadoInformeEjerciciosFisicos)
+         {
+            var tipoEjercicioMostrar = informeEjerciciosFisicosMostrar.Where(t => t.TipoEjercicioID == listadoInforme.TipoEjercicioID).SingleOrDefault();
+            if (tipoEjercicioMostrar == null)
+            {
+                tipoEjercicioMostrar = new VistaNombreEjercicio 
+                {
+                    TipoEjercicioID = listadoInforme.TipoEjercicioID,
+                    TipoEjercicioDescripcion = listadoInforme.TipoEjercicio.Descripcion,
+                    VistaEjercicioFisico = new List<VistaEjercicioFisico>()
+                };
+                informeEjerciciosFisicosMostrar.Add(tipoEjercicioMostrar);
+            }
+
+            var vistaEjerciciosFisicos = new VistaEjercicioFisico
+            {
+                FechaInicioString = listadoInforme.Inicio.ToString("dd/MM/yyyy, HH:mm"),
+                FechaFinString = listadoInforme.Fin.ToString("dd/MM/yyyy, HH:mm"),
+                EstadoEmocionalInicio = Enum.GetName(typeof(EstadoEmocional), listadoInforme.EstadoEmocionalInicio),
+                EstadoEmocionalFin = Enum.GetName(typeof(EstadoEmocional), listadoInforme.EstadoEmocionalFin),
+                Observaciones = listadoInforme.Observaciones,
+                IntervaloEjercicio = listadoInforme.IntervaloEjercicio
+            };
+            tipoEjercicioMostrar.VistaEjercicioFisico.Add(vistaEjerciciosFisicos);
+         };
+
+        return Json(informeEjerciciosFisicosMostrar);
+    }
 }
+
+// public JsonResult TraerpersonaEjercicios(int? id, int? TipoEjercicioaBuscarID, string NombreEjercicio)
+//          {
+//             List<ListaTipoEjercicio> tiposEjercicioMostrar = new List<ListaTipoEjercicio>();
+
+   
+
+//             var personas = _context.Personas.Include(t => t.TipoEjercicio).ToList();
+            
+
+//             if (NombreEjercicio != null)
+//             {
+//                 personas = personas.Where(t => t.TipoEjercicio.Nombre == NombreEjercicio).ToList();
+//             }
+
+//             foreach (var persona in personas)
+//             {
+//                 var tipoEjercicioMostrar = tiposEjercicioMostrar.SingleOrDefault(t => t.TipoEjercicioID == persona.TipoEjercicioID);
+//                 if (tipoEjercicioMostrar == null)
+//                 {
+//                     tipoEjercicioMostrar =  new ListaTipoEjercicio
+//                     {
+//                         PersonaID = persona.TipoEjercicioID,
+//                         TipoEjercicioID = persona.TipoEjercicioID,
+//                         NombreTipoEjercicio = persona.TipoEjercicio.Nombre,
+//                         ListadoEjercicios = new List<VistaPersonasEjercicios>()
+//                     };
+//                     tiposEjercicioMostrar.Add(tipoEjercicioMostrar);
+
+
+//                 }
+//                     var VistaPersonasEjercicios = new VistaPersonasEjercicios
+//                     {    
+//                          = persona.PersonaID,
+//                         NombrePersona = persona.Nombre,
+//                         ApellidoPersona = persona.Apellido,
+                        
+//                     };
+//                     tipoEjercicioMostrar.ListadoEjercicios.Add(VistaPersonasEjercicios);
+
+//             }
+
+//              return Json(tiposEjercicioMostrar);
+// }  
