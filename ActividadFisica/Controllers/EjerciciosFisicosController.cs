@@ -58,6 +58,27 @@ public class EjerciciosFisicosController : Controller
     }
     public IActionResult InformeEjerciciosFisicos()
     {
+        // Crear una lista de SelectListItem que incluya el elemento adicional
+        var selectListItems = new List<SelectListItem>
+         {
+            new SelectListItem { Value = "0", Text = "[SELECCIONE...]"}
+         };
+
+        // Obtener todas las opciones del enum
+        var enumValues = Enum.GetValues(typeof(EstadoEmocional)).Cast<EstadoEmocional>();
+
+        // Convertir las opciones del enum en SelectListItem
+        selectListItems.AddRange(enumValues.Select(e => new SelectListItem
+        {
+            Value = e.GetHashCode().ToString(),
+            Text = e.ToString().ToUpper()
+        }));
+
+        // Pasar la lista de opciones al modelo de la vista
+        ViewBag.EstadoEmocionalInicioBuscar = selectListItems.OrderBy(t => t.Text).ToList();
+        ViewBag.EstadoEmocionalFinBuscar = selectListItems.OrderBy(t => t.Text).ToList();
+
+
         return View();
     }
 
@@ -238,47 +259,3 @@ public class EjerciciosFisicosController : Controller
         return Json(informeEjerciciosFisicosMostrar);
     }
 }
-
-// public JsonResult TraerpersonaEjercicios(int? id, int? TipoEjercicioaBuscarID, string NombreEjercicio)
-//          {
-//             List<ListaTipoEjercicio> tiposEjercicioMostrar = new List<ListaTipoEjercicio>();
-
-   
-
-//             var personas = _context.Personas.Include(t => t.TipoEjercicio).ToList();
-            
-
-//             if (NombreEjercicio != null)
-//             {
-//                 personas = personas.Where(t => t.TipoEjercicio.Nombre == NombreEjercicio).ToList();
-//             }
-
-//             foreach (var persona in personas)
-//             {
-//                 var tipoEjercicioMostrar = tiposEjercicioMostrar.SingleOrDefault(t => t.TipoEjercicioID == persona.TipoEjercicioID);
-//                 if (tipoEjercicioMostrar == null)
-//                 {
-//                     tipoEjercicioMostrar =  new ListaTipoEjercicio
-//                     {
-//                         PersonaID = persona.TipoEjercicioID,
-//                         TipoEjercicioID = persona.TipoEjercicioID,
-//                         NombreTipoEjercicio = persona.TipoEjercicio.Nombre,
-//                         ListadoEjercicios = new List<VistaPersonasEjercicios>()
-//                     };
-//                     tiposEjercicioMostrar.Add(tipoEjercicioMostrar);
-
-
-//                 }
-//                     var VistaPersonasEjercicios = new VistaPersonasEjercicios
-//                     {    
-//                          = persona.PersonaID,
-//                         NombrePersona = persona.Nombre,
-//                         ApellidoPersona = persona.Apellido,
-                        
-//                     };
-//                     tipoEjercicioMostrar.ListadoEjercicios.Add(VistaPersonasEjercicios);
-
-//             }
-
-//              return Json(tiposEjercicioMostrar);
-// }  
