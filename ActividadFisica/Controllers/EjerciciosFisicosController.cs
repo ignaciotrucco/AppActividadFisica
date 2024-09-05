@@ -51,7 +51,7 @@ public class EjerciciosFisicosController : Controller
         ViewBag.TipoEjercicioBuscarID = new SelectList(tipoEjercicioBuscar.OrderBy(c => c.Descripcion), "TipoEjercicioID", "Descripcion");
 
         var lugares = _context.Lugares.ToList();
-        lugares.Add(new Lugar { LugarID = 0, Nombre = "SELECCIONE EL LUGAR"});
+        lugares.Add(new Lugar { LugarID = 0, Nombre = "SELECCIONE EL LUGAR" });
         ViewBag.LugarID = new SelectList(lugares.OrderBy(l => l.LugarID), "LugarID", "Nombre");
 
         return View();
@@ -80,6 +80,52 @@ public class EjerciciosFisicosController : Controller
 
 
         return View();
+    }
+
+    public IActionResult InformePorLugar()
+    {
+        return View();
+    }
+
+    public JsonResult ListadoEjerciciosPorLugar(DateTime? FechaDesde, DateTime? FechaHasta)
+    {
+        List<VistaLugar> vistaLugar = new List<VistaLugar>();
+
+        var listadoEjercicios = _context.EjercicioFisico.Include(l => l.Lugar).Include(l => l.TipoEjercicio).OrderBy(l => l.Inicio).ToList();
+
+        if (FechaDesde != null && FechaHasta != null)
+        {
+            listadoEjercicios = listadoEjercicios.Where(l => l.Inicio >= FechaDesde && l.Inicio <= FechaHasta).ToList();
+        }
+
+        foreach (var listadoEjercicio in listadoEjercicios.OrderBy(l => l.Lugar.Nombre))
+        {
+            var mostrarLugar = vistaLugar.Where(m => m.LugarID == listadoEjercicio.LugarID).SingleOrDefault();
+
+            if (mostrarLugar == null)
+            {
+                mostrarLugar = new VistaLugar
+                {
+                    LugarID = listadoEjercicio.LugarID,
+                    Nombre = listadoEjercicio.Lugar.Nombre,
+                    VistaEjercicios = new List<VistaEjercicioFisico>()
+                };
+                vistaLugar.Add(mostrarLugar);
+            }
+
+            var mostrarEjerciciosPorLugar = new VistaEjercicioFisico {
+                EjercicioFisicoID = listadoEjercicio.EjercicioFisicoID,
+                TipoEjercicioID = listadoEjercicio.TipoEjercicioID,
+                TipoEjercicioDescripcion = listadoEjercicio.TipoEjercicio.Descripcion,
+                FechaInicioString = listadoEjercicio.Inicio.ToString("dd/MM/yyyy, HH:mm"),
+                FechaFinString = listadoEjercicio.Fin.ToString("dd/MM/yyyy, HH:mm"),
+                IntervaloEjercicio = listadoEjercicio.IntervaloEjercicio,
+                Observaciones = listadoEjercicio.Observaciones
+            };
+            mostrarLugar.VistaEjercicios.Add(mostrarEjerciciosPorLugar);
+        }
+
+        return Json(vistaLugar);
     }
 
     public JsonResult ListadoEjerciciosFisicos(int? ejercicioFisicosID, DateTime? FechaDesde, DateTime? FechaHasta, int? TipoEjercicioBuscar)
@@ -213,24 +259,24 @@ public class EjerciciosFisicosController : Controller
 
     public JsonResult ListadoInformeEjerciciosFisicos(DateTime? FechaDesde, DateTime? FechaHasta)
     {
-         List<VistaNombreEjercicio> informeEjerciciosFisicosMostrar = new List<VistaNombreEjercicio>();
+        List<VistaNombreEjercicio> informeEjerciciosFisicosMostrar = new List<VistaNombreEjercicio>();
 
-         var listadoInformeEjerciciosFisicos = _context.EjercicioFisico
-         .Include(l => l.TipoEjercicio).Include(l => l.Lugar)
-         .OrderBy(l => l.Inicio).OrderBy(l => l.TipoEjercicio.Descripcion)
-         .ToList();
+        var listadoInformeEjerciciosFisicos = _context.EjercicioFisico
+        .Include(l => l.TipoEjercicio).Include(l => l.Lugar)
+        .OrderBy(l => l.Inicio).OrderBy(l => l.TipoEjercicio.Descripcion)
+        .ToList();
 
-         if (FechaDesde != null && FechaHasta != null)
+        if (FechaDesde != null && FechaHasta != null)
         {
             listadoInformeEjerciciosFisicos = listadoInformeEjerciciosFisicos.Where(e => e.Inicio >= FechaDesde && e.Inicio <= FechaHasta).ToList();
         }
 
-         foreach (var listadoInforme in listadoInformeEjerciciosFisicos)
-         {
+        foreach (var listadoInforme in listadoInformeEjerciciosFisicos)
+        {
             var tipoEjercicioMostrar = informeEjerciciosFisicosMostrar.Where(t => t.TipoEjercicioID == listadoInforme.TipoEjercicioID).SingleOrDefault();
             if (tipoEjercicioMostrar == null)
             {
-                tipoEjercicioMostrar = new VistaNombreEjercicio 
+                tipoEjercicioMostrar = new VistaNombreEjercicio
                 {
                     TipoEjercicioID = listadoInforme.TipoEjercicioID,
                     TipoEjercicioDescripcion = listadoInforme.TipoEjercicio.Descripcion,
@@ -254,7 +300,7 @@ public class EjerciciosFisicosController : Controller
                 LugarNombre = listadoInforme.Lugar.Nombre
             };
             tipoEjercicioMostrar.VistaEjercicioFisico.Add(vistaEjerciciosFisicos);
-         };
+        };
 
         return Json(informeEjerciciosFisicosMostrar);
     }

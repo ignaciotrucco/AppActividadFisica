@@ -10,3 +10,9 @@ public class Lugar
     public string? Nombre {get; set;}
     public virtual ICollection<EjercicioFisico> EjercicioFisico {get; set;}
 }
+
+public class VistaLugar {
+    public int LugarID {get; set;}
+    public string? Nombre {get; set;}
+    public List<VistaEjercicioFisico> VistaEjercicios {get; set;}
+}
