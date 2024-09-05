@@ -13,4 +13,5 @@ public class ApplicationDbContext : IdentityDbContext
 
     public DbSet<Tipo_Ejercicio> Tipo_Ejercicios {get; set;} 
     public DbSet<EjercicioFisico> EjercicioFisico {get; set;}
+    public DbSet<Lugar> Lugares {get; set;}
 }

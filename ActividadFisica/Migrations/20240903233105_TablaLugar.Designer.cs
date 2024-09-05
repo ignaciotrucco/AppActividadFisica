@@ -4,6 +4,7 @@ using ActividadFisica.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ActividadFisica.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240903233105_TablaLugar")]
+    partial class TablaLugar
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,8 +55,6 @@ namespace ActividadFisica.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("EjercicioFisicoID");
-
-                    b.HasIndex("LugarID");
 
                     b.HasIndex("TipoEjercicioID");
 
@@ -299,19 +300,11 @@ namespace ActividadFisica.Migrations
 
             modelBuilder.Entity("ActividadFisica.Models.EjercicioFisico", b =>
                 {
-                    b.HasOne("ActividadFisica.Models.Lugar", "Lugar")
-                        .WithMany("EjercicioFisico")
-                        .HasForeignKey("LugarID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("ActividadFisica.Models.Tipo_Ejercicio", "TipoEjercicio")
                         .WithMany("EjercicioFisico")
                         .HasForeignKey("TipoEjercicioID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Lugar");
 
                     b.Navigation("TipoEjercicio");
                 });
@@ -365,11 +358,6 @@ namespace ActividadFisica.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("ActividadFisica.Models.Lugar", b =>
-                {
-                    b.Navigation("EjercicioFisico");
                 });
 
             modelBuilder.Entity("ActividadFisica.Models.Tipo_Ejercicio", b =>

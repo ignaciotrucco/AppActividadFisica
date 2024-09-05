@@ -69,6 +69,7 @@ function ListadoEjerciciosFisicos() {
                 contenidoTabla += `
                 <tr>
                     <td class="text-center">${ejerciciosFisicoMostrar.tipoEjercicioDescripcion}</td>
+                    <td class="text-center">${ejerciciosFisicoMostrar.lugarNombre}</td>
                     <td class="text-center">${ejerciciosFisicoMostrar.fechaInicioString}</td>
                     <td class="text-center">${ejerciciosFisicoMostrar.estadoEmocionalInicio}</td>
                     <td class="text-center">${ejerciciosFisicoMostrar.fechaFinString}</td>
@@ -95,6 +96,7 @@ function ListadoEjerciciosFisicos() {
 function LimpiarModal() {
     document.getElementById("IdEjercicios").value = 0;
     document.getElementById("TipoEjercicioID").value = 0;
+    document.getElementById("LugarID").value = 0;
     document.getElementById("fechainicio").value = null;
     document.getElementById("fechafin").value = null;
     document.getElementById("EstadoEmocionalInicio").value = 0;
@@ -118,6 +120,7 @@ function AbrirModalEditar(ejercicioFisicosID) {
             document.getElementById("IdEjercicios").value = ejercicioFisicosID;
             $("#tituloModal").text("Editar ejercicio fisico")
             document.getElementById("TipoEjercicioID").value = ejercicioFisico.tipoEjercicioID;
+            document.getElementById("LugarID").value = ejercicioFisico.lugarID;
             document.getElementById("fechainicio").value = ejercicioFisico.inicio;
             document.getElementById("fechafin").value = ejercicioFisico.fin;
             document.getElementById("EstadoEmocionalInicio").value = ejercicioFisico.estadoEmocionalInicio;
@@ -142,6 +145,7 @@ function GuardarRegistro() {
 
     let ejercicioFisicoID = document.getElementById("IdEjercicios").value;
     let tipoEjercicioID = document.getElementById("TipoEjercicioID").value;
+    let lugarID = document.getElementById("LugarID").value;
     let inicio = document.getElementById("fechainicio").value;
     let fin = document.getElementById("fechafin").value;
     let estadoEmocionalInicio = document.getElementById("EstadoEmocionalInicio").value;
@@ -164,6 +168,7 @@ function GuardarRegistro() {
                 data: {
                     ejercicioFisicoID: ejercicioFisicoID,
                     tipoEjercicioID: tipoEjercicioID,
+                    LugarID: lugarID,
                     inicio: inicio,
                     fin: fin,
                     estadoEmocionalInicio: estadoEmocionalInicio,

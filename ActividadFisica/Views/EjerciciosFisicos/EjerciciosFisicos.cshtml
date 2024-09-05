@@ -23,9 +23,13 @@
         <form>
           <div class="row">
             <input type="hidden" id="IdEjercicios" value="0">
-            <div>
+            <div class="col-md-6">
               <label for="TipoEjercicioID" class="form-label">Tipo de Ejercicio</label>
               @Html.DropDownList("TipoEjercicioID", null, htmlAttributes: new { @class = "form-control" })
+            </div>
+            <div class="col-md-6">
+              <label for="LugarID" class="form-label">Lugar</label>
+              @Html.DropDownList("LugarID", null, htmlAttributes: new { @class = "form-control" })
             </div>
 
             <div class="row mt-3">
@@ -114,6 +118,7 @@
   <thead>
     <tr>
       <th class="text-center">Tipo de Ejercicio</th>
+      <th class="text-center">Lugar</th>
       <th class="text-center">Fecha Inicio</th>
       <th class="text-center">Estado Emocional</th>
       <th class="text-center">Fecha Fin</th>
@@ -131,10 +136,10 @@
 @section Scripts {
   <script src="~/js/ejerciciosfisicos1.0.0.js"></script>
   <script>
-    
+
     // Configura el tamaño de la página, por ejemplo, un ancho de 297 mm (A3 horizontal)
     let anchoAmpliado = new jsPDF('landscape', 'mm', [210, 297]);// Landscape A4 (210mm x 297mm)
-    
+
     function ImprimirEjerciciosFisicos() {
       var doc = anchoAmpliado;
 
@@ -180,8 +185,8 @@
       var res = doc.autoTableHtmlToJson(element);
 
       // FILTRADO DE COLUMNAS QUE NO SE QUIERE MOSTRAR
-      const filtrarColumnas = res.columns.filter((_, index) => index !== 6 && index !== 7);
-      const filtrarData = res.data.map(row => row.filter((_, index) => index !== 6 && index !== 7));
+      const filtrarColumnas = res.columns.filter((_, index) => index !== 7 && index !== 8);
+      const filtrarData = res.data.map(row => row.filter((_, index) => index !== 7 && index !== 8));
 
       doc.autoTable(filtrarColumnas, filtrarData, {
         addPageContent: pageContent,
@@ -215,6 +220,11 @@
             fillColor: [255, 255, 255]
           },
           5: {
+            cellWidth: 'wrap',
+            fontSize: 7,
+            fillColor: [255, 255, 255]
+          },
+          6: {
             cellWidth: 'wrap',
             fontSize: 7,
             fillColor: [255, 255, 255]

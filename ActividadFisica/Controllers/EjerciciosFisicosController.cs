@@ -50,6 +50,10 @@ public class EjerciciosFisicosController : Controller
         tipoEjercicioBuscar.Add(new Tipo_Ejercicio { TipoEjercicioID = 0, Descripcion = "[Tipos de ejercicios]" });
         ViewBag.TipoEjercicioBuscarID = new SelectList(tipoEjercicioBuscar.OrderBy(c => c.Descripcion), "TipoEjercicioID", "Descripcion");
 
+        var lugares = _context.Lugares.ToList();
+        lugares.Add(new Lugar { LugarID = 0, Nombre = "SELECCIONE EL LUGAR"});
+        ViewBag.LugarID = new SelectList(lugares.OrderBy(l => l.LugarID), "LugarID", "Nombre");
+
         return View();
     }
     public IActionResult InformeEjerciciosFisicos()
@@ -62,7 +66,7 @@ public class EjerciciosFisicosController : Controller
         List<VistaEjercicioFisico> ejerciciosFisicosMostrar = new List<VistaEjercicioFisico>();
 
         //VARIABLE PARA GUARDAR LA LISTA DE DATOS DE EJERCICIOS FISICOS
-        var ejerciciosFisicos = _context.EjercicioFisico.ToList();
+        var ejerciciosFisicos = _context.EjercicioFisico.Include(e => e.Lugar).ToList();
 
         //LUEGO PREGUNTAMOS SI EL USUARIO INGRESO UN ID
         //QUIERE DECIR QUE QUIERE UN EJERCICIO EN PARTICULAR
@@ -99,7 +103,9 @@ public class EjerciciosFisicosController : Controller
                 FechaFinString = ejercicioFisico.Fin.ToString("dd/MM/yyyy, HH:mm"),
                 EstadoEmocionalInicio = Enum.GetName(typeof(EstadoEmocional), ejercicioFisico.EstadoEmocionalInicio),
                 EstadoEmocionalFin = Enum.GetName(typeof(EstadoEmocional), ejercicioFisico.EstadoEmocionalFin),
-                Observaciones = ejercicioFisico.Observaciones
+                Observaciones = ejercicioFisico.Observaciones,
+                LugarID = ejercicioFisico.LugarID,
+                LugarNombre = ejercicioFisico.Lugar.Nombre
             };
             ejerciciosFisicosMostrar.Add(ejercicioFisicoMostrar);
         }
@@ -120,7 +126,7 @@ public class EjerciciosFisicosController : Controller
     }
 
 
-    public JsonResult GuardarEjerciciosFisicos(int ejercicioFisicoID, int tipoEjercicioID, DateTime inicio, DateTime fin, EstadoEmocional estadoEmocionalInicio, EstadoEmocional estadoEmocionalFin, string observaciones)
+    public JsonResult GuardarEjerciciosFisicos(int ejercicioFisicoID, int tipoEjercicioID, int LugarID, DateTime inicio, DateTime fin, EstadoEmocional estadoEmocionalInicio, EstadoEmocional estadoEmocionalFin, string observaciones)
     {
 
         string resultado = "";
@@ -134,6 +140,7 @@ public class EjerciciosFisicosController : Controller
             {
                 EjercicioFisicoID = ejercicioFisicoID,
                 TipoEjercicioID = tipoEjercicioID,
+                LugarID = LugarID,
                 Inicio = inicio,
                 Fin = fin,
                 EstadoEmocionalInicio = estadoEmocionalInicio,
@@ -155,6 +162,7 @@ public class EjerciciosFisicosController : Controller
             if (editarEjercicio != null)
             {
                 editarEjercicio.TipoEjercicioID = tipoEjercicioID;
+                editarEjercicio.LugarID = LugarID;
                 editarEjercicio.Inicio = inicio;
                 editarEjercicio.Fin = fin;
                 editarEjercicio.EstadoEmocionalInicio = estadoEmocionalInicio;
@@ -186,7 +194,10 @@ public class EjerciciosFisicosController : Controller
     {
          List<VistaNombreEjercicio> informeEjerciciosFisicosMostrar = new List<VistaNombreEjercicio>();
 
-         var listadoInformeEjerciciosFisicos = _context.EjercicioFisico.Include(l => l.TipoEjercicio).OrderBy(l => l.TipoEjercicio.Descripcion).ToList();
+         var listadoInformeEjerciciosFisicos = _context.EjercicioFisico
+         .Include(l => l.TipoEjercicio).Include(l => l.Lugar)
+         .OrderBy(l => l.Inicio).OrderBy(l => l.TipoEjercicio.Descripcion)
+         .ToList();
 
          if (FechaDesde != null && FechaHasta != null)
         {
@@ -209,12 +220,17 @@ public class EjerciciosFisicosController : Controller
 
             var vistaEjerciciosFisicos = new VistaEjercicioFisico
             {
+                EjercicioFisicoID = listadoInforme.EjercicioFisicoID,
+                TipoEjercicioID = listadoInforme.TipoEjercicioID,
+                TipoEjercicioDescripcion = listadoInforme.TipoEjercicio.Descripcion,
                 FechaInicioString = listadoInforme.Inicio.ToString("dd/MM/yyyy, HH:mm"),
                 FechaFinString = listadoInforme.Fin.ToString("dd/MM/yyyy, HH:mm"),
                 EstadoEmocionalInicio = Enum.GetName(typeof(EstadoEmocional), listadoInforme.EstadoEmocionalInicio),
                 EstadoEmocionalFin = Enum.GetName(typeof(EstadoEmocional), listadoInforme.EstadoEmocionalFin),
                 Observaciones = listadoInforme.Observaciones,
-                IntervaloEjercicio = listadoInforme.IntervaloEjercicio
+                IntervaloEjercicio = listadoInforme.IntervaloEjercicio,
+                LugarID = listadoInforme.LugarID,
+                LugarNombre = listadoInforme.Lugar.Nombre
             };
             tipoEjercicioMostrar.VistaEjercicioFisico.Add(vistaEjerciciosFisicos);
          };

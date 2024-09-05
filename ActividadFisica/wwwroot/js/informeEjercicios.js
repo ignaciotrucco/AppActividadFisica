@@ -15,10 +15,11 @@ function ListadoInformeEjerciciosFisicos() {
 
             let contenidoTabla = ``;
 
-            $.each(informeEjerciciosFisicosMostrar, function (index, ejerciciosFisicoMostrar) {
+            $.each(informeEjerciciosFisicosMostrar, function (index, tipoEjercicio) {
                 contenidoTabla += `
                 <tr>
-                    <td class="text-center">${ejerciciosFisicoMostrar.tipoEjercicioDescripcion}</td>
+                    <td class="text-center">${tipoEjercicio.tipoEjercicioDescripcion}</td>
+                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -27,7 +28,7 @@ function ListadoInformeEjerciciosFisicos() {
                     <td></td>
                 </tr>`;
 
-                $.each(ejerciciosFisicoMostrar.vistaEjercicioFisico, function (index, ejercicio) {
+                $.each(tipoEjercicio.vistaEjercicioFisico, function (index, ejercicio) {
                     contenidoTabla += `
                 <tr>
                     <td></td>
@@ -37,6 +38,7 @@ function ListadoInformeEjerciciosFisicos() {
                     <td class="text-center">${ejercicio.estadoEmocionalFin}</td>
                     <td class="text-center">${ejercicio.intervaloEjercicio}</td>
                     <td class="text-center">${ejercicio.observaciones}</td>
+                    <td class="text-center">${ejercicio.lugarNombre}</td>
                 </tr>`;
                 });
             });

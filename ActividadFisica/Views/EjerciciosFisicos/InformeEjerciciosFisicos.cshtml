@@ -13,24 +13,21 @@
     <div class="row">
       <div class="col-md-2">
         <label for="FechaDesdeBuscar" class="form-label text-light">Fecha desde</label>
-        <input type="datetime-local" id="FechaDesdeBuscar" class="form-control" />
+        <input type="date" id="FechaDesdeBuscar" class="form-control" onchange="ListadoInformeEjerciciosFisicos()"/>
       </div>
       <div class="col-md-2">
         <label for="FechaHastaBuscar" class="form-label text-light">Fecha hasta</label>
-        <input type="datetime-local" id="FechaHastaBuscar" class="form-control" />
+        <input type="date" id="FechaHastaBuscar" class="form-control"  onchange="ListadoInformeEjerciciosFisicos()"/>
       </div>
       <div class="col-md-2 mt-4">
-        <button type="button" class="btn btn-danger" onclick="ListadoInformeEjerciciosFisicos()">Filtrar!</button>
-      </div>
-      <div class="col-md-2 mt-4">
-        <button type="button" class="btn btn-danger" onclick="LimpiarFiltros()" onchange="ListadoInformeEjerciciosFisicos()">Limpiar</button>
+        <button type="button" class="btn btn-danger" onclick="LimpiarFiltros()">Limpiar</button>
       </div>
     </div>
   </div>
 
 
 
-<table class="table table-dark table-bordered table-striped" id="imprimir-tabla">
+<table class="table table-dark table-bordered table-striped">
   <thead>
     <tr>
       <th class="text-center">Tipo de Ejercicio</th>
@@ -40,6 +37,7 @@
       <th class="text-center">Estado Emocional</th>
       <th class="text-center">Duracion</th>
       <th class="text-center">Observaciones</th>
+      <th class="text-center">Lugar</th>
     </tr>
   </thead>
   <tbody id="tbody-informe"></tbody>
