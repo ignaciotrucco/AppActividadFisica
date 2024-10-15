@@ -4,6 +4,7 @@ using ActividadFisica.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ActividadFisica.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241010213747_TablaEventos")]
+    partial class TablaEventos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -55,8 +58,6 @@ namespace ActividadFisica.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("EjercicioFisicoID");
-
-                    b.HasIndex("EventoDeportivoID");
 
                     b.HasIndex("LugarID");
 
@@ -323,12 +324,6 @@ namespace ActividadFisica.Migrations
 
             modelBuilder.Entity("ActividadFisica.Models.EjercicioFisico", b =>
                 {
-                    b.HasOne("EventoDeportivo", "EventoDeportivo")
-                        .WithMany("EjercicioFisico")
-                        .HasForeignKey("EventoDeportivoID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("ActividadFisica.Models.Lugar", "Lugar")
                         .WithMany("EjercicioFisico")
                         .HasForeignKey("LugarID")
@@ -340,8 +335,6 @@ namespace ActividadFisica.Migrations
                         .HasForeignKey("TipoEjercicioID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("EventoDeportivo");
 
                     b.Navigation("Lugar");
 
@@ -405,11 +398,6 @@ namespace ActividadFisica.Migrations
                 });
 
             modelBuilder.Entity("ActividadFisica.Models.Tipo_Ejercicio", b =>
-                {
-                    b.Navigation("EjercicioFisico");
-                });
-
-            modelBuilder.Entity("EventoDeportivo", b =>
                 {
                     b.Navigation("EjercicioFisico");
                 });

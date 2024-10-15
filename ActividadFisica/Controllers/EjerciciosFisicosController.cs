@@ -54,6 +54,10 @@ public class EjerciciosFisicosController : Controller
         lugares.Add(new Lugar { LugarID = 0, Nombre = "SELECCIONE EL LUGAR" });
         ViewBag.LugarID = new SelectList(lugares.OrderBy(l => l.LugarID), "LugarID", "Nombre");
 
+        var eventos = _context.EventosDeportivos.Where(e => e.Eliminado == false).ToList();
+        eventos.Add(new EventoDeportivo { EventoDeportivoID = 0, Nombre = "SELECCIONE EL EVENTO" });
+        ViewBag.EventoID = new SelectList(eventos.OrderBy(l => l.EventoDeportivoID), "EventoDeportivoID", "Nombre");
+
         return View();
     }
     public IActionResult InformeEjerciciosFisicos()
@@ -113,7 +117,8 @@ public class EjerciciosFisicosController : Controller
                 vistaLugar.Add(mostrarLugar);
             }
 
-            var mostrarEjerciciosPorLugar = new VistaEjercicioFisico {
+            var mostrarEjerciciosPorLugar = new VistaEjercicioFisico
+            {
                 EjercicioFisicoID = listadoEjercicio.EjercicioFisicoID,
                 TipoEjercicioID = listadoEjercicio.TipoEjercicioID,
                 TipoEjercicioDescripcion = listadoEjercicio.TipoEjercicio.Descripcion,
@@ -133,7 +138,7 @@ public class EjerciciosFisicosController : Controller
         List<VistaEjercicioFisico> ejerciciosFisicosMostrar = new List<VistaEjercicioFisico>();
 
         //VARIABLE PARA GUARDAR LA LISTA DE DATOS DE EJERCICIOS FISICOS
-        var ejerciciosFisicos = _context.EjercicioFisico.Include(e => e.Lugar).ToList();
+        var ejerciciosFisicos = _context.EjercicioFisico.Include(e => e.Lugar).Include(e => e.EventoDeportivo).ToList();
 
         //LUEGO PREGUNTAMOS SI EL USUARIO INGRESO UN ID
         //QUIERE DECIR QUE QUIERE UN EJERCICIO EN PARTICULAR
@@ -172,7 +177,9 @@ public class EjerciciosFisicosController : Controller
                 EstadoEmocionalFin = Enum.GetName(typeof(EstadoEmocional), ejercicioFisico.EstadoEmocionalFin),
                 Observaciones = ejercicioFisico.Observaciones,
                 LugarID = ejercicioFisico.LugarID,
-                LugarNombre = ejercicioFisico.Lugar.Nombre
+                LugarNombre = ejercicioFisico.Lugar.Nombre,
+                EventoDeportivoID = ejercicioFisico.EventoDeportivoID,
+                EventoDeportivoNombre = ejercicioFisico.EventoDeportivo.Nombre
             };
             ejerciciosFisicosMostrar.Add(ejercicioFisicoMostrar);
         }
@@ -193,7 +200,7 @@ public class EjerciciosFisicosController : Controller
     }
 
 
-    public JsonResult GuardarEjerciciosFisicos(int ejercicioFisicoID, int tipoEjercicioID, int LugarID, DateTime inicio, DateTime fin, EstadoEmocional estadoEmocionalInicio, EstadoEmocional estadoEmocionalFin, string observaciones)
+    public JsonResult GuardarEjerciciosFisicos(int ejercicioFisicoID, int tipoEjercicioID, int LugarID, int EventoID, DateTime inicio, DateTime fin, EstadoEmocional estadoEmocionalInicio, EstadoEmocional estadoEmocionalFin, string observaciones)
     {
 
         string resultado = "";
@@ -208,6 +215,7 @@ public class EjerciciosFisicosController : Controller
                 EjercicioFisicoID = ejercicioFisicoID,
                 TipoEjercicioID = tipoEjercicioID,
                 LugarID = LugarID,
+                EventoDeportivoID = EventoID,
                 Inicio = inicio,
                 Fin = fin,
                 EstadoEmocionalInicio = estadoEmocionalInicio,
@@ -230,6 +238,7 @@ public class EjerciciosFisicosController : Controller
             {
                 editarEjercicio.TipoEjercicioID = tipoEjercicioID;
                 editarEjercicio.LugarID = LugarID;
+                editarEjercicio.EventoDeportivoID = EventoID;
                 editarEjercicio.Inicio = inicio;
                 editarEjercicio.Fin = fin;
                 editarEjercicio.EstadoEmocionalInicio = estadoEmocionalInicio;

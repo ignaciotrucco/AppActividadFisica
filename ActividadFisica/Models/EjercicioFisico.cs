@@ -9,6 +9,7 @@ namespace ActividadFisica.Models
         public int EjercicioFisicoID { get; set; }
         public int TipoEjercicioID { get; set; }
         public int LugarID {get; set;}
+        public int EventoDeportivoID { get; set; }
         public DateTime Inicio { get; set; }
         public DateTime Fin { get; set; }
 
@@ -19,6 +20,7 @@ namespace ActividadFisica.Models
         public string? Observaciones { get; set; }
         public virtual Tipo_Ejercicio TipoEjercicio { get; set; }
         public virtual Lugar Lugar {get; set;}
+        public virtual EventoDeportivo EventoDeportivo {get; set;}
     }
 
     public enum EstadoEmocional
@@ -56,7 +58,9 @@ namespace ActividadFisica.Models
         public int EjercicioFisicoID { get; set; }
         public int TipoEjercicioID { get; set; }
         public int LugarID {get; set;}
+        public int EventoDeportivoID { get; set; }
         public string? LugarNombre {get; set;}
+        public string? EventoDeportivoNombre {get; set;}
         public string? TipoEjercicioDescripcion { get; set; }
         public DateTime Inicio { get; set; }
         public DateTime Fin { get; set; }
