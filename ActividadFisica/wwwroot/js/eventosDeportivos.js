@@ -4,7 +4,7 @@ function ListadoEventos() {
 
     $.ajax({
         url: '../../EventosDeportivos/ListadoEventos',
-        data: { },
+        data: {},
         type: 'GET',
         dataType: 'json',
         success: function (listadoEventos) {
@@ -20,7 +20,7 @@ function ListadoEventos() {
                     <tr class="bg-danger">
                         <td><del>${evento.nombre}</del></td>
                         <td></td>
-                        <td class="text-center"><button type="button" class="btn btn-danger" onclick="HabilitarEvento(${evento.eventoDeportivoID})">Habilitar</button></td>
+                        <td class="text-center"><button type="button" class="btn btn-success" onclick="HabilitarEvento(${evento.eventoDeportivoID})">Habilitar</button></td>
                     </tr>
                 `;
                 }
@@ -65,7 +65,7 @@ function GuardarEvento() {
 
     $.ajax({
         url: '../../EventosDeportivos/GuardarEvento',
-        data: {EventoID: eventoID, EventoNombre: eventoNombre },
+        data: { EventoID: eventoID, EventoNombre: eventoNombre },
         type: 'POST',
         dataType: 'json',
         success: function (resultado) {
@@ -91,10 +91,15 @@ function DeshabilitarEvento(eventoID) {
 
     $.ajax({
         url: '../../EventosDeportivos/DeshabilitarEvento',
-        data: {EventoID: eventoID },
+        data: { EventoID: eventoID },
         type: 'POST',
         dataType: 'json',
         success: function (Eliminado) {
+
+            if (Eliminado == false) {
+                alert("No se puede deshabilitar, existen registros asociados");
+            }
+
             ListadoEventos();
         },
 
@@ -111,7 +116,7 @@ function DeshabilitarEvento(eventoID) {
 function HabilitarEvento(eventoID) {
     $.ajax({
         url: '../../EventosDeportivos/HabilitarEvento',
-        data: {EventoID: eventoID },
+        data: { EventoID: eventoID },
         type: 'POST',
         dataType: 'json',
         success: function (resultado) {
@@ -130,10 +135,10 @@ function HabilitarEvento(eventoID) {
 
 function ModalEditar(eventoID) {
     $("#tituloModal").text("Editar Evento Deportivo")
-    
+
     $.ajax({
         url: '../../EventosDeportivos/ListadoEventos',
-        data: {EventoID: eventoID },
+        data: { EventoID: eventoID },
         type: 'GET',
         dataType: 'json',
         success: function (listadoEventos) {
@@ -141,7 +146,7 @@ function ModalEditar(eventoID) {
             $("#EventoID").val(eventoID);
             $("#eventoNombre").val(eventoListar.nombre);
             $("#modalEventos").modal("show");
-            
+
         },
 
         error: function (xhr, status) {
