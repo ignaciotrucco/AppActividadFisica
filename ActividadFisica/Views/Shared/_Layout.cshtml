@@ -25,13 +25,22 @@
                 <h1><i class="fa-solid fa-medal"></i> Actividad <span class="txtRojo">Física</span></h1>
                 <nav id="nav">
                     <a href="~/Home/Index"><i class="fa-solid fa-house"></i>Inicio</a>
-                    <a href="~/PanelEjercicios/PanelEjercicios"><i class="fa-solid fa-chart-simple"></i>Panel de Ejercicios</a>
-                    <a href="~/TipoEjercicios/TipoEjercicios"><i class="fa-solid fa-person-running"></i>Tipo de Ejercicios</a>
+                    @if (User.IsInRole("ADMINISTRADOR"))
+                    {
+                        <a href="~/TipoEjercicios/TipoEjercicios"><i class="fa-solid fa-person-running"></i>Tipo de
+                            Ejercicios</a>
+                        <a href="~/EventosDeportivos/EventosDeportivos"><i class="fa-solid fa-calendar-days"></i>Eventos
+                            Deportivos</a>
+                    }
                     <a href="~/Lugares/Lugares"><i class="fa-solid fa-location-dot"></i>Lugares</a>
-                    <a href="~/EventosDeportivos/EventosDeportivos"><i class="fa-solid fa-calendar-days"></i>Eventos Deportivos</a>
-                    <a href="~/EjerciciosFisicos/EjerciciosFisicos"><i class="fa-solid fa-dumbbell"></i>Ejercicios Fisicos</a>
-                    <a href="~/EjerciciosFisicos/InformeEjerciciosFisicos"><i class="fa-solid fa-dumbbell"></i>Ejercicios por Tipo</a>
-                    <a href="~/EjerciciosFisicos/InformePorLugar"><i class="fa-solid fa-dumbbell"></i>Ejercicios por Lugar</a>
+                    <a href="~/EjerciciosFisicos/EjerciciosFisicos"><i class="fa-solid fa-dumbbell"></i>Ejercicios
+                        Fisicos</a>
+                    <a href="~/PanelEjercicios/PanelEjercicios"><i class="fa-solid fa-chart-simple"></i>Panel de
+                        Ejercicios</a>
+                    <a href="~/EjerciciosFisicos/InformeEjerciciosFisicos"><i class="fa-solid fa-dumbbell"></i>Ejercicios
+                        por Tipo</a>
+                    <a href="~/EjerciciosFisicos/InformePorLugar"><i class="fa-solid fa-dumbbell"></i>Ejercicios por
+                        Lugar</a>
                     <a href="~/InformeGeneral/InformeGeneral"><i class="fa-solid fa-dumbbell"></i>Informe General</a>
                 </nav>
                 <div class="redes d-flex">
@@ -52,6 +61,15 @@
 
     else
     {
+        <div class="contenedor-header">
+            <header>
+                <h1><i class="fa-solid fa-medal"></i> Actividad <span class="txtRojo">Física</span></h1>
+                <div class="redes d-flex">
+                    <partial name="_LoginPartial" />
+                </div>
+            </header>
+        </div>
+
         <div class="container">
             <main role="main" class="pb-3">
                 @RenderBody()

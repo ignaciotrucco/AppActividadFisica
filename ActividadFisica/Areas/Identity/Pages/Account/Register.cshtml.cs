@@ -10,12 +10,15 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
+using ActividadFisica.Data;
+using ActividadFisica.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 
@@ -25,14 +28,18 @@ namespace ActividadFisica.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
+        private ApplicationDbContext _context;
         private readonly IUserStore<IdentityUser> _userStore;
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly RoleManager<IdentityRole> _rolManager;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
             IUserStore<IdentityUser> userStore,
+            RoleManager<IdentityRole> rolManager,
+            ApplicationDbContext context,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender)
@@ -43,6 +50,8 @@ namespace ActividadFisica.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _context = context;
+            _rolManager = rolManager;
         }
 
         /// <summary>
@@ -104,9 +113,19 @@ namespace ActividadFisica.Areas.Identity.Pages.Account
         {
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
+            // Vuelve a llenar el ViewData["Genero"] cuando la validación falla
+            ViewData["Genero"] = new List<SelectListItem>
+                {
+                    new SelectListItem { Value = "0", Text = "[SELECCIONE...]" }
+                }.Concat(Enum.GetValues(typeof(Genero)).Cast<Genero>().Select(e => new SelectListItem
+                {
+                    Value = e.GetHashCode().ToString(),
+                    Text = e.ToString().ToUpper()
+                })).ToList();
         }
 
-        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+        public async Task<IActionResult> OnPostAsync(string NombreCompleto, DateTime FechaNacimiento, Genero Genero, decimal Peso, decimal Altura, string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
@@ -120,29 +139,26 @@ namespace ActividadFisica.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User created a new account with password.");
 
-                    var userId = await _userManager.GetUserIdAsync(user);
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    var callbackUrl = Url.Page(
-                        "/Account/ConfirmEmail",
-                        pageHandler: null,
-                        values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
-                        protocol: Request.Scheme);
+                    var usuario = _context.Users.Where(u => u.Email == user.Email).SingleOrDefault();
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    await _userManager.AddToRoleAsync(usuario, "USUARIO");
 
-                    if (_userManager.Options.SignIn.RequireConfirmedAccount)
+                    var nuevaPersona = new Persona
                     {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
-                    }
-                    else
-                    {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(returnUrl);
-                    }
+                        NombreCompleto = NombreCompleto,
+                        FechaNacimiento = FechaNacimiento,
+                        Genero = Genero,
+                        Peso = Peso,
+                        Altura = Altura,
+                        UsuarioID = user.Id,
+                    };
+
+                    _context.Personas.Add(nuevaPersona);
+                    _context.SaveChanges();
+
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    return LocalRedirect(returnUrl);
                 }
                 foreach (var error in result.Errors)
                 {
@@ -150,7 +166,18 @@ namespace ActividadFisica.Areas.Identity.Pages.Account
                 }
             }
 
-            // If we got this far, something failed, redisplay form
+
+            // Vuelve a llenar el ViewData["Genero"] cuando la validación falla
+            ViewData["Genero"] = new List<SelectListItem>
+                {
+                    new SelectListItem { Value = "0", Text = "[SELECCIONE...]" }
+                }.Concat(Enum.GetValues(typeof(Genero)).Cast<Genero>().Select(e => new SelectListItem
+                {
+                    Value = e.GetHashCode().ToString(),
+                    Text = e.ToString().ToUpper()
+                })).ToList();
+
+           
             return Page();
         }
 

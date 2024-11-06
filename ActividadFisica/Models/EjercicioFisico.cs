@@ -10,6 +10,7 @@ namespace ActividadFisica.Models
         public int TipoEjercicioID { get; set; }
         public int LugarID { get; set; }
         public int EventoDeportivoID { get; set; }
+        public string? UsuarioID {get; set;}
         public DateTime Inicio { get; set; }
         public DateTime Fin { get; set; }
 

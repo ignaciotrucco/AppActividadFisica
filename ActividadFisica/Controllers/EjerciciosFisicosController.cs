@@ -4,6 +4,7 @@ using ActividadFisica.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace ActividadFisica.Controllers;
 
@@ -12,16 +13,18 @@ namespace ActividadFisica.Controllers;
 public class EjerciciosFisicosController : Controller
 {
     private ApplicationDbContext _context;
+    private readonly UserManager<IdentityUser> _userManager;
 
     //CONSTRUCTOR
-    public EjerciciosFisicosController(ApplicationDbContext context)
+    public EjerciciosFisicosController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
     {
         _context = context;
+        _userManager = userManager;
     }
 
     public IActionResult EjerciciosFisicos()
     {
-
+        var usuarioLogueado = _userManager.GetUserId(HttpContext.User);
         // Crear una lista de SelectListItem que incluya el elemento adicional
         var selectListItems = new List<SelectListItem>
          {
@@ -50,7 +53,7 @@ public class EjerciciosFisicosController : Controller
         tipoEjercicioBuscar.Add(new Tipo_Ejercicio { TipoEjercicioID = 0, Descripcion = "[Tipos de ejercicios]" });
         ViewBag.TipoEjercicioBuscarID = new SelectList(tipoEjercicioBuscar.OrderBy(c => c.Descripcion), "TipoEjercicioID", "Descripcion");
 
-        var lugares = _context.Lugares.ToList();
+        var lugares = _context.Lugares.Where(l => l.UsuarioID == usuarioLogueado).ToList();
         lugares.Add(new Lugar { LugarID = 0, Nombre = "SELECCIONE EL LUGAR" });
         ViewBag.LugarID = new SelectList(lugares.OrderBy(l => l.LugarID), "LugarID", "Nombre");
 
@@ -93,9 +96,11 @@ public class EjerciciosFisicosController : Controller
 
     public JsonResult ListadoEjerciciosPorLugar(DateTime? FechaDesde, DateTime? FechaHasta)
     {
+        var usuarioLogueado = _userManager.GetUserId(HttpContext.User);
+
         List<VistaLugar> vistaLugar = new List<VistaLugar>();
 
-        var listadoEjercicios = _context.EjercicioFisico.Include(l => l.Lugar).Include(l => l.TipoEjercicio).OrderBy(l => l.Inicio).ToList();
+        var listadoEjercicios = _context.EjercicioFisico.Where(e => e.UsuarioID == usuarioLogueado).Include(l => l.Lugar).Include(l => l.TipoEjercicio).OrderBy(l => l.Inicio).ToList();
 
         if (FechaDesde != null && FechaHasta != null)
         {
@@ -135,10 +140,12 @@ public class EjerciciosFisicosController : Controller
 
     public JsonResult ListadoEjerciciosFisicos(int? ejercicioFisicosID, DateTime? FechaDesde, DateTime? FechaHasta, int? TipoEjercicioBuscar)
     {
+        var usuarioLogueado = _userManager.GetUserId(HttpContext.User);
+
         List<VistaEjercicioFisico> ejerciciosFisicosMostrar = new List<VistaEjercicioFisico>();
 
         //VARIABLE PARA GUARDAR LA LISTA DE DATOS DE EJERCICIOS FISICOS
-        var ejerciciosFisicos = _context.EjercicioFisico.Include(e => e.Lugar).Include(e => e.EventoDeportivo).ToList();
+        var ejerciciosFisicos = _context.EjercicioFisico.Include(e => e.Lugar).Include(e => e.EventoDeportivo).Where(e => e.UsuarioID == usuarioLogueado).ToList();
 
         //LUEGO PREGUNTAMOS SI EL USUARIO INGRESO UN ID
         //QUIERE DECIR QUE QUIERE UN EJERCICIO EN PARTICULAR
@@ -189,7 +196,9 @@ public class EjerciciosFisicosController : Controller
 
     public JsonResult LlamarDatosAlModal(int? ejercicioFisicoID)
     {
-        var ejercicioFisico = _context.EjercicioFisico.ToList();
+        var usuarioLogueado = _userManager.GetUserId(HttpContext.User);
+
+        var ejercicioFisico = _context.EjercicioFisico.Where(e => e.UsuarioID == usuarioLogueado).ToList();
 
         if (ejercicioFisicoID != null)
         {
@@ -202,6 +211,8 @@ public class EjerciciosFisicosController : Controller
 
     public JsonResult GuardarEjerciciosFisicos(int ejercicioFisicoID, int tipoEjercicioID, int LugarID, int EventoID, DateTime inicio, DateTime fin, EstadoEmocional estadoEmocionalInicio, EstadoEmocional estadoEmocionalFin, string observaciones)
     {
+
+        var usuarioLogueado = _userManager.GetUserId(HttpContext.User);
 
         string resultado = "";
         observaciones = observaciones.ToUpper();
@@ -220,7 +231,8 @@ public class EjerciciosFisicosController : Controller
                 Fin = fin,
                 EstadoEmocionalInicio = estadoEmocionalInicio,
                 EstadoEmocionalFin = estadoEmocionalFin,
-                Observaciones = observaciones
+                Observaciones = observaciones,
+                UsuarioID = usuarioLogueado
             };
 
             _context.Add(nuevoEjercicio);
@@ -268,9 +280,11 @@ public class EjerciciosFisicosController : Controller
 
     public JsonResult ListadoInformeEjerciciosFisicos(DateTime? FechaDesde, DateTime? FechaHasta)
     {
+        var usuarioLogueado = _userManager.GetUserId(HttpContext.User);
+
         List<VistaNombreEjercicio> informeEjerciciosFisicosMostrar = new List<VistaNombreEjercicio>();
 
-        var listadoInformeEjerciciosFisicos = _context.EjercicioFisico
+        var listadoInformeEjerciciosFisicos = _context.EjercicioFisico.Where(l => l.UsuarioID == usuarioLogueado)
         .Include(l => l.TipoEjercicio).Include(l => l.Lugar)
         .OrderBy(l => l.Inicio).OrderBy(l => l.TipoEjercicio.Descripcion)
         .ToList();

@@ -4,6 +4,7 @@ using ActividadFisica.Models;
 using ActividadFisica.Data;
 using System.Reflection.Metadata;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace ActividadFisica.Controllers;
 
@@ -11,13 +12,16 @@ namespace ActividadFisica.Controllers;
 public class LugaresController : Controller
 {
     private ApplicationDbContext _context;
+    private readonly UserManager<IdentityUser> _userManager;
 
     // CONSTRUCTOR
-    public LugaresController(ApplicationDbContext context)
+    public LugaresController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
     {
         _context = context;
+        _userManager = userManager;
     }
 
+    
     public IActionResult Lugares()
     {
         return View();
@@ -25,8 +29,9 @@ public class LugaresController : Controller
 
     public JsonResult ListadoLugares(int? LugarID)
     {
+        var usuarioLogueado = _userManager.GetUserId(HttpContext.User);
 
-        var listadoLugares = _context.Lugares.ToList();
+        var listadoLugares = _context.Lugares.Where(l => l.UsuarioID == usuarioLogueado).ToList();
 
         if (LugarID != null) {
             listadoLugares = _context.Lugares.Where(l => l.LugarID == LugarID).ToList();
@@ -37,6 +42,7 @@ public class LugaresController : Controller
 
     public JsonResult GuardarLugar(int LugarID, string Nombre)
     {
+        var usuarioLogueado = _userManager.GetUserId(HttpContext.User);
         string resultado = "";
         if (!String.IsNullOrEmpty(Nombre))
         {
@@ -49,7 +55,8 @@ public class LugaresController : Controller
                 {
                     var nuevoLugar = new Lugar
                     {
-                        Nombre = Nombre
+                        Nombre = Nombre,
+                        UsuarioID = usuarioLogueado
                     };
                     _context.Add(nuevoLugar);
                     _context.SaveChanges();

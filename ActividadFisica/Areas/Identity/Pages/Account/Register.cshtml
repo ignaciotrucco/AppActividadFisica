@@ -8,38 +8,158 @@
 
 <div class="d-flex align-items-center flex-column justify-content-center h-100 text-dark mt-3" id="header">
     <div class="row" id="loginForm">
-        <div class="col-md-6 col-sm-12 text" id="right">
+        <div class="col-sm-12 text" id="right">
             <h2>Bienvenido a la APP de Movimiento Activo del Instituto Ezpeleta</h2>
             <p class="mb-3 text-muted" style="font-size:78.5% !important;">Registrese con Email y Contraseña</p>
             <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-                <div class="form-group mt-3">
-                    <label style="background: red; padding:5px;color:white !important;">Email</label>
-                    <input asp-for="Input.Email" class="form-control" aria-required="true" placeholder="Enter email">
-                    <span asp-validation-for="Input.Email" class="text-danger"></span>
-                </div>
-                <div class="form-group mt-2">
-                    <label style="background: red; padding:5px;color:white !important;">Contraseña</label>
-                    <input asp-for="Input.Password" class="form-control" aria-required="true" class="form-control" placeholder="Password">
-                    <span asp-validation-for="Input.Password" class="text-danger"></span>
-                </div>
-                <div class="form-group mt-2">
-                    <label style="background: red; padding:5px;color:white !important;">Repetir Contraseña</label>
-                    <input asp-for="Input.ConfirmPassword" class="form-control" aria-required="true" class="form-control" placeholder="Password">
-                    <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+                
+                <div class="row">
+                    <!-- Left Column -->
+                    <div class="col-md-6">
+                        <!-- Full Name -->
+                        <div class="form-group mt-3">
+                            <label class="bg-danger text-white p-1">Nombre Completo</label>
+                            <input type="text" name="NombreCompleto" class="form-control" placeholder="Ingrese su nombre completo">
+                        </div>
+
+                        <!-- Date of Birth -->
+                        <div class="form-group mt-3">
+                            <label class="bg-danger text-white p-1">Fecha de Nacimiento</label>
+                            <input type="date" name="FechaNacimiento" class="form-control">
+                        </div>
+
+                        <!-- Gender -->
+                        <div class="form-group mt-3">
+                            <label for="Genero" class="bg-danger text-white p-1">Genero</label>
+                            @Html.DropDownList("Genero", (IEnumerable<SelectListItem>)ViewBag.Genero, htmlAttributes: new
+                                {
+                                    @class = "form-control border-danger"
+                                })
+                        </div>
+
+                        <!-- Weight -->
+                        <div class="form-group mt-3">
+                            <label class="bg-danger text-white p-1">Peso (kg)</label>
+                            <input type="number" name="Peso" step="0.1" class="form-control" placeholder="Ejemplo: 70.5">
+                        </div>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div class="col-md-6">
+                        <!-- Height -->
+                        <div class="form-group mt-3">
+                            <label class="bg-danger text-white p-1">Altura (cm)</label>
+                            <input type="number" name="Altura" class="form-control" placeholder="Ejemplo: 170.5">
+                        </div>
+
+                        <!-- Email -->
+                        <div class="form-group mt-3">
+                            <label class="bg-danger text-white p-1">Email</label>
+                            <input asp-for="Input.Email" class="form-control" aria-required="true" placeholder="Enter email">
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="form-group mt-3">
+                            <label class="bg-danger text-white p-1">Contraseña</label>
+                            <input asp-for="Input.Password" class="form-control" aria-required="true" placeholder="Password">
+                            <span asp-validation-for="Input.Password" class="text-danger"></span>
+                        </div>
+
+                        <!-- Confirm Password -->
+                        <div class="form-group mt-3">
+                            <label class="bg-danger text-white p-1">Repetir Contraseña</label>
+                            <input asp-for="Input.ConfirmPassword" class="form-control" aria-required="true" placeholder="Password">
+                            <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                        </div>
+                    </div>
                 </div>
 
-                <button id="registerSubmit" type="submit" class="btn btn-primary mt-4" >Registrarse</button>
+                <button id="registerSubmit" type="submit" class="btn btn-primary mt-4">Registrarse</button>
 
                 <div class="mt-3 d-flex align-items-center justify-content-center">
                     <p class="mb-0 me-2">¿Ya tienes cuenta?</p>
-                    <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl" data-mdb-button-init data-mdb-ripple-init class="btn btn-dark">¡Inicia Sesión!</a>
+                    <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl" class="btn btn-dark">¡Inicia Sesión!</a>
                 </div>
-
             </form>
         </div>
     </div>
 </div>
+
+
+@* <div class="d-flex align-items-center flex-column justify-content-center h-100 text-dark mt-3" id="header">
+    <div class="row" id="loginForm">
+        <div class="col-md-6 col-sm-12 text" id="right">
+            <h2>Bienvenido a la APP de Movimiento Activo del Instituto Ezpeleta</h2>
+            <p class="mb-3 text-muted" style="font-size:78.5% !important;">Regístrese con Email y Contraseña</p>
+            <form>
+
+                <!-- Full Name -->
+                <div class="form-group mt-3">
+                    <label style="background: red; padding:5px;color:white !important;">Nombre Completo</label>
+                    <input type="text" name="FullName" class="form-control" aria-required="true"
+                        placeholder="Ingrese su nombre completo" id="nombreCompleto">
+                </div>
+
+                <!-- Date of Birth -->
+                <div class="form-group mt-3">
+                    <label style="background: red; padding:5px;color:white !important;">Fecha de Nacimiento</label>
+                    <input type="date" name="DateOfBirth" class="form-control" aria-required="true" id="fechaNac">
+                </div>
+
+                <!-- Gender -->
+                <div class="form-group mt-3">
+                    <label for="Genero" class="form-label">Estado Emocional al Inicio</label>
+                    @Html.DropDownList("Genero", (IEnumerable<SelectListItem>)ViewBag.Genero, htmlAttributes: new
+                        {
+                            @class = "form-control"
+                        })
+                </div>
+
+                <!-- Weight -->
+                <div class="form-group mt-3">
+                    <label style="background: red; padding:5px;color:white !important;">Peso (kg)</label>
+                    <input type="number" name="Weight" step="0.1" class="form-control" aria-required="true"
+                        placeholder="Ejemplo: 70.5" id="peso">
+                </div>
+
+                <!-- Height -->
+                <div class="form-group mt-3">
+                    <label style="background: red; padding:5px;color:white !important;">Altura (cm)</label>
+                    <input type="number" name="Height" step="0.1" class="form-control" aria-required="true"
+                        placeholder="Ejemplo: 170.5" id="altura">
+                </div>
+
+                <!-- Email -->
+                <div class="form-group mt-3">
+                    <label style="background: red; padding:5px;color:white !important;">Email</label>
+                    <input class="form-control" aria-required="true" placeholder="Ingrese su email" id="email">
+                    <span class="text-danger"></span>
+                </div>
+
+                <!-- Password -->
+                <div class="form-group mt-2">
+                    <label style="background: red; padding:5px;color:white !important;">Contraseña</label>
+                    <input type="password" class="form-control" aria-required="true" placeholder="Ingrese su contraseña"
+                        id="password">
+                    <span class="text-danger"></span>
+                </div>
+            </form>
+            <!-- Submit Button -->
+            <button id="registerSubmit" type="submit" class="btn btn-primary mt-4">Registrarse</button>
+
+            <!-- Link to Login -->
+            <div class="mt-3 d-flex align-items-center justify-content-center">
+                <p class="mb-0 me-2">¿Ya tienes cuenta?</p>
+                <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl" data-mdb-button-init data-mdb-ripple-init
+                    class="btn btn-dark">¡Inicia Sesión!</a>
+            </div>
+        </div>
+    </div>
+</div> *@
+
+
 
 
 

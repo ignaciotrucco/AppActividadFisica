@@ -1,6 +1,7 @@
 using ActividadFisica.Data;
 using ActividadFisica.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -10,10 +11,13 @@ namespace ActividadFisica.Controllers;
 public class PanelEjerciciosController : Controller
 {
     private ApplicationDbContext _context;
-    
-    public PanelEjerciciosController(ApplicationDbContext context)
+    private readonly UserManager<IdentityUser> _userManager;
+
+    // CONSTRUCTOR
+    public PanelEjerciciosController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
     {
         _context = context;
+        _userManager = userManager;
     }
     public IActionResult PanelEjercicios()
     {
@@ -25,6 +29,8 @@ public class PanelEjerciciosController : Controller
 
     public JsonResult GraficoBarraEjercicios(int TipoEjercicioId, int Mes, int Anio)
     {
+        var usuarioLogueado = _userManager.GetUserId(HttpContext.User);
+
         List<EjercicioPorDia> ejerciciosPorDia = new List<EjercicioPorDia>();
 
         //VARIABLE QUE AGREGA AL LISTADO TODOS LOS DIAS DEL MES
@@ -49,7 +55,7 @@ public class PanelEjerciciosController : Controller
 
         //BUSCAR EN BASE DE DATOS EJERCICIOS CON LOS PARAMETROS PROPUESTOS
         var ejercicios = _context.EjercicioFisico.Where(e => e.TipoEjercicioID == TipoEjercicioId
-        && e.Inicio.Month == Mes && e.Inicio.Year == Anio).ToList();
+        && e.Inicio.Month == Mes && e.Inicio.Year == Anio && e.UsuarioID == usuarioLogueado).ToList();
 
         foreach (var ejercicio in ejercicios.OrderBy(e => e.Inicio))
         {
@@ -65,6 +71,7 @@ public class PanelEjerciciosController : Controller
 
     public JsonResult GraficoCircular(int Mes, int Anio) 
     {
+        var usuarioLogueado = _userManager.GetUserId(HttpContext.User);
         //Nuevo listado de tipo de ejercicios
         var vistaTipoEjercicios = new List<VistaTipoEjercicioFisico>();
 
@@ -76,7 +83,7 @@ public class PanelEjerciciosController : Controller
         {
             //POR CADA TIPO DE EJERCICIO BUSQUEMOS EN LA TABLA DE EJERCICIOS FISICOS POR ESE TIPO, EN EL MES Y AÑO SOLICITADO
             var ejercicios = _context.EjercicioFisico.Where(e => e.TipoEjercicioID == tipoEjercicioActivo.TipoEjercicioID 
-            && e.Inicio.Month == Mes && e.Inicio.Year == Anio).ToList();
+            && e.Inicio.Month == Mes && e.Inicio.Year == Anio && e.UsuarioID == usuarioLogueado).ToList();
 
             foreach (var ejercicio in ejercicios)
             {

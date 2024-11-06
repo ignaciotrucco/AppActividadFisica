@@ -8,11 +8,13 @@ public class Lugar
     [Key]
     public int LugarID {get; set;}
     public string? Nombre {get; set;}
+    public string? UsuarioID {get; set;}
     public virtual ICollection<EjercicioFisico> EjercicioFisico {get; set;}
 }
 
 public class VistaLugar {
     public int LugarID {get; set;}
     public string? Nombre {get; set;}
+    public string? UsuarioID {get; set;}
     public List<VistaEjercicioFisico> VistaEjercicios {get; set;}
 }

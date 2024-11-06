@@ -4,6 +4,7 @@ using ActividadFisica.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace ActividadFisica.Controllers;
 
@@ -12,11 +13,13 @@ namespace ActividadFisica.Controllers;
 public class InformeGeneralController : Controller
 {
     private ApplicationDbContext _context;
+    private readonly UserManager<IdentityUser> _userManager;
 
-    //CONSTRUCTOR
-    public InformeGeneralController(ApplicationDbContext context)
+    // CONSTRUCTOR
+    public InformeGeneralController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
     {
         _context = context;
+        _userManager = userManager;
     }
 
     public IActionResult InformeGeneral()
@@ -26,9 +29,10 @@ public class InformeGeneralController : Controller
 
     public JsonResult ListadoInformeGeneral()
     {
+        var usuarioLogueado = _userManager.GetUserId(HttpContext.User);
         List<EventoVista> EventoVista = new List<EventoVista>();
 
-        var ejercicios = _context.EjercicioFisico.Include(e => e.TipoEjercicio).Include(e => e.Lugar).Include(e => e.EventoDeportivo).ToList();
+        var ejercicios = _context.EjercicioFisico.Where(e => e.UsuarioID == usuarioLogueado).Include(e => e.TipoEjercicio).Include(e => e.Lugar).Include(e => e.EventoDeportivo).ToList();
 
         foreach (var ejercicio in ejercicios)
         {
