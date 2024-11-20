@@ -1,0 +1,27 @@
+@{
+    ViewData["Title"] = "DEPORTISTAS";
+}
+
+<link rel="stylesheet" href="~/css/tipoEjercicios.css">
+
+<div class="text-center">
+    <h1 class="display-4 tituloEj mt-2">Deportistas</h1>
+</div>
+
+<table class="table table-dark table-bordered table-striped" id="imprimir-tabla">
+    <thead>
+        <tr>
+            <th class="text-center">Nombre</th>
+            <th class="text-center">Nacimiento</th>
+            <th class="text-center">Genero</th>
+            <th class="text-center">Peso (kg)</th>
+            <th class="text-center">Altura (cm)</th>
+            <th class="text-center">Email</th>
+        </tr>
+    </thead>
+    <tbody id="tbody-deportistas"></tbody>
+</table>
+
+@section Scripts {
+    <script src="~/js/deportistas.js"></script>
+}

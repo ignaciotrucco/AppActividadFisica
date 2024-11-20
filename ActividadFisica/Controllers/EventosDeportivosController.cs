@@ -9,7 +9,7 @@ using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 
 namespace ActividadFisica.Controllers;
 
-[Authorize]
+[Authorize(Roles = "ADMINISTRADOR")]
 public class EventosDeportivosController : Controller
 {
     private ApplicationDbContext _context;

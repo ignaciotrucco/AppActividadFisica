@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ActividadFisica.Controllers;
 
-[Authorize]
+[Authorize(Roles = "ADMINISTRADOR")]
 public class TipoEjerciciosController : Controller
 {
     private ApplicationDbContext _context;
