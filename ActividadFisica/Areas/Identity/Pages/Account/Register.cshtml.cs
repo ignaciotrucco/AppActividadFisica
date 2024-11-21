@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -125,7 +126,7 @@ namespace ActividadFisica.Areas.Identity.Pages.Account
                 })).ToList();
         }
 
-        public async Task<IActionResult> OnPostAsync(string NombreCompleto, DateTime FechaNacimiento, Genero Genero, decimal Peso, decimal Altura, string returnUrl = null)
+        public async Task<IActionResult> OnPostAsync(string NombreCompleto, DateTime FechaNacimiento, Genero Genero, string Peso, string Altura, string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
@@ -144,13 +145,33 @@ namespace ActividadFisica.Areas.Identity.Pages.Account
 
                     await _userManager.AddToRoleAsync(usuario, "USUARIO");
 
+                    //AGREGAR CULTURA ESPAÑOL ARGENTINA AL METODO
+                    Thread.CurrentThread.CurrentCulture = new CultureInfo("es-AR");
+
+                    //CONVERTIR PESO A DECIMAL POR SI EL USUARIO SELECCIONA UN .
+                    string pesoString = Peso;
+                    if (!string.IsNullOrEmpty(pesoString))
+                    {
+                        pesoString = pesoString.Replace(".", ",");
+                    }
+                    Decimal pesoDecimal = new Decimal();
+                    var validaPeso = Decimal.TryParse(pesoString, out pesoDecimal);
+
+                    //CONVERTIR ALTURA A DECIMAL POR SI EL USUARIO SELECCIONA UN .
+                    string alturaString = Altura;
+                    if (!string.IsNullOrEmpty(alturaString)) {
+                        alturaString = alturaString.Replace(".", ",");
+                    }
+                    Decimal alturaDecimal = new Decimal();
+                    var validaAltura = Decimal.TryParse(alturaString, out alturaDecimal);
+
                     var nuevaPersona = new Persona
                     {
                         NombreCompleto = NombreCompleto,
                         FechaNacimiento = FechaNacimiento,
                         Genero = Genero,
-                        Peso = Peso,
-                        Altura = Altura,
+                        Peso = pesoDecimal,
+                        Altura = alturaDecimal,
                         UsuarioID = user.Id,
                     };
 
@@ -177,7 +198,7 @@ namespace ActividadFisica.Areas.Identity.Pages.Account
                     Text = e.ToString().ToUpper()
                 })).ToList();
 
-           
+
             return Page();
         }
 

@@ -141,11 +141,8 @@
   <script src="~/js/ejerciciosfisicos1.0.0.js"></script>
   <script>
 
-    // Configura el tamaño de la página, por ejemplo, un ancho de 297 mm (A3 horizontal)
-    let anchoAmpliado = new jsPDF('landscape', 'mm', [210, 297]);// Landscape A4 (210mm x 297mm)
-
     function ImprimirEjerciciosFisicos() {
-      var doc = anchoAmpliado;
+      var doc = new jsPDF('landscape', 'mm', [210, 297]);// Landscape A4 (210mm x 297mm)
 
       var totalPagesExp = "{total_pages_count_string}";
       var pageContent = function (data) {
@@ -189,8 +186,8 @@
       var res = doc.autoTableHtmlToJson(element);
 
       // FILTRADO DE COLUMNAS QUE NO SE QUIERE MOSTRAR
-      const filtrarColumnas = res.columns.filter((_, index) => index !== 7 && index !== 8);
-      const filtrarData = res.data.map(row => row.filter((_, index) => index !== 7 && index !== 8));
+      const filtrarColumnas = res.columns.filter((_, index) => index !== 8 && index !== 9);
+      const filtrarData = res.data.map(row => row.filter((_, index) => index !== 8 && index !== 9));
 
       doc.autoTable(filtrarColumnas, filtrarData, {
         addPageContent: pageContent,
@@ -229,6 +226,11 @@
             fillColor: [255, 255, 255]
           },
           6: {
+            cellWidth: 'wrap',
+            fontSize: 7,
+            fillColor: [255, 255, 255]
+          },
+          7: {
             cellWidth: 'wrap',
             fontSize: 7,
             fillColor: [255, 255, 255]
