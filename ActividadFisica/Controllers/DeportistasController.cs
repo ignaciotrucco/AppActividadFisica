@@ -31,14 +31,20 @@ public class DeportistasController : Controller
     {
         List<VistaPersonas> vistaPersonas = new List<VistaPersonas>();
 
-        var listadoDeportistas = _context.Personas.ToList();
+        var listadoDeportistas = (from persona in _context.Personas
+                                  join user in _context.Users on persona.UsuarioID equals user.Id
+                                  join userRole in _context.UserRoles on user.Id equals userRole.UserId
+                                  join role in _context.Roles on userRole.RoleId equals role.Id
+                                  where role.Name == "USUARIO"
+                                  select persona).ToList();
         var usuarios = _context.Users.ToList();
 
         foreach (var deportistas in listadoDeportistas)
         {
             var usuario = usuarios.Where(u => u.Id == deportistas.UsuarioID).Single();
 
-            var vistaPersona = new VistaPersonas {
+            var vistaPersona = new VistaPersonas
+            {
                 PersonaID = deportistas.PersonaID,
                 UsuarioID = deportistas.UsuarioID,
                 Email = usuario.Email,
