@@ -9,5 +9,6 @@ public class Tipo_Ejercicio
     public int TipoEjercicioID {get; set;}
     public string? Descripcion {get; set;}
     public bool Eliminado {get; set;}
+    public decimal NroMET {get; set;}
     public virtual ICollection<EjercicioFisico> EjercicioFisico {get; set;}
 }

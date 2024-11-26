@@ -25,6 +25,7 @@ function ListadoTipoEjercicios() {
                 contenidoTabla += `
                 <tr>
                     <td>${tipoDeEjercicio.descripcion}</td>
+                    <td>${tipoDeEjercicio.nroMET.toFixed(2)}</td>
                     <td class="text-center"><button type="button" class="btn btn-success" onclick="AbrirModalEditar(${tipoDeEjercicio.tipoEjercicioID})"><i class="fa-solid fa-pen-to-square"></i></button></td>
                     <td class="text-center"><button type="button" class="btn btn-danger" onclick="EliminarRegistros(${tipoDeEjercicio.tipoEjercicioID})"><i class="fa-solid fa-trash"></i></button></td>
                 </tr>
@@ -58,6 +59,7 @@ function ListadoTipoEjercicios() {
 function LimpiarModal() {
     document.getElementById("IdEjercicios").value = 0;
     document.getElementById("descripcion").value = "";
+    $("#MET").val("");
 }
 
 function NuevoRegistro() {
@@ -84,6 +86,7 @@ function AbrirModalEditar(tipoEjercicioID) {
             document.getElementById("IdEjercicios").value = tipoEjercicioID;
             $("#tituloModal").text("Editar tipo de ejercicio")
             document.getElementById("descripcion").value = tipoDeEjercicio.descripcion;
+            let met = $("#MET").val(tipoDeEjercicio.nroMET);
             $("#ModalTipoEjercicio").modal("show");
         },
         // código a ejecutar si la petición falla;
@@ -103,6 +106,7 @@ function GuardarRegistro() {
     //GUARDAMOS EN UNA VARIABLE LOS DATOS DEL INPUT
     let tipoEjercicioID = document.getElementById("IdEjercicios").value;
     let descripcion = document.getElementById("descripcion").value;
+    let met = $("#MET").val();
     //POR UN LADO PROGRAMAR VERIFICACIONES DE DATOS EN EL FRONT CUANDO SON DE INGRESO DE VALORES Y NO SE NECESITA VERIFICAR EN BASES DE DATOS
     //LUEGO POR OTRO LADO HACER VERIFICACIONES DE DATOS EN EL BACK, SI EXISTE EL ELEMENTO SI NECESITAMOS LA BASE DE DATOS.
     console.log(descripcion);
@@ -119,7 +123,7 @@ function GuardarRegistro() {
                 url: '../../TipoEjercicios/GuardarTipoEjercicios',
                 // la información a enviar
                 // (también es posible utilizar una cadena de datos)
-                data: { tipoEjercicioID: tipoEjercicioID, descripcion: descripcion },
+                data: { tipoEjercicioID: tipoEjercicioID, descripcion: descripcion, NroMET: met },
                 //especifico peticion tipo POST
                 type: 'POST',
                 //info que se espera de respuesta

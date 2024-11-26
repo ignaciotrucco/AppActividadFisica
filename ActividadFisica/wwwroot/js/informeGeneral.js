@@ -15,7 +15,7 @@ function InformeGeneral() {
                 contenidoTabla += `
                 <tr>
                     <td>${evento.nombre}</td>
-                    <td colspan="8"></td>
+                    <td colspan="9"></td>
                 </tr>`;
 
 
@@ -24,7 +24,7 @@ function InformeGeneral() {
                     <tr>
                         <td></td>
                         <td>${lugar.nombre}</td>
-                        <td colspan="7"></td>
+                        <td colspan="8"></td>
                     </tr>`;
 
 
@@ -33,7 +33,7 @@ function InformeGeneral() {
                         <tr>
                             <td colspan="2"></td>
                             <td>${ejercicio.descripcion}</td>
-                            <td colspan="6"></td>
+                            <td colspan="7"></td>
                         </tr>`;
 
 
@@ -47,6 +47,7 @@ function InformeGeneral() {
                     <td class="text-center">${ejercicioFisico.observaciones}</td>
                     <td class="text-center">${ejercicioFisico.estadoEmocionalInicio}</td>
                     <td class="text-center">${ejercicioFisico.estadoEmocionalFin}</td>
+                    <td class="text-center">${ejercicioFisico.caloriasQuemadas}</td>
                 </tr>`;
                         });
                     });

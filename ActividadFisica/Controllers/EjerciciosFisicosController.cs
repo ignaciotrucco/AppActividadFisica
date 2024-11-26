@@ -110,6 +110,18 @@ public class EjerciciosFisicosController : Controller
         foreach (var listadoEjercicio in listadoEjercicios.OrderBy(l => l.Lugar.Nombre))
         {
             var mostrarLugar = vistaLugar.Where(m => m.LugarID == listadoEjercicio.LugarID).SingleOrDefault();
+            var deportista = _context.Personas.Where(d => d.UsuarioID == usuarioLogueado).Single();
+
+            decimal caloriasQuemadas = 0;
+
+            if (deportista.Genero == Genero.Masculino)
+            {
+                caloriasQuemadas = listadoEjercicio.TipoEjercicio.NroMET * deportista.Peso * (decimal)listadoEjercicio.IntervaloEjercicio.TotalHours;
+            }
+            else
+            {
+                caloriasQuemadas = listadoEjercicio.TipoEjercicio.NroMET * deportista.Peso * (decimal)listadoEjercicio.IntervaloEjercicio.TotalHours * 0.9m;
+            }
 
             if (mostrarLugar == null)
             {
@@ -130,7 +142,8 @@ public class EjerciciosFisicosController : Controller
                 FechaInicioString = listadoEjercicio.Inicio.ToString("dd/MM/yyyy, HH:mm"),
                 FechaFinString = listadoEjercicio.Fin.ToString("dd/MM/yyyy, HH:mm"),
                 IntervaloEjercicio = listadoEjercicio.IntervaloEjercicio,
-                Observaciones = listadoEjercicio.Observaciones
+                Observaciones = listadoEjercicio.Observaciones,
+                CaloriasQuemadas = caloriasQuemadas
             };
             mostrarLugar.VistaEjercicios.Add(mostrarEjerciciosPorLugar);
         }
@@ -147,6 +160,7 @@ public class EjerciciosFisicosController : Controller
         //VARIABLE PARA GUARDAR LA LISTA DE DATOS DE EJERCICIOS FISICOS
         var ejerciciosFisicos = _context.EjercicioFisico.Include(e => e.Lugar).Include(e => e.EventoDeportivo).Where(e => e.UsuarioID == usuarioLogueado).ToList();
 
+        var deportistas = _context.Personas.ToList();
         //LUEGO PREGUNTAMOS SI EL USUARIO INGRESO UN ID
         //QUIERE DECIR QUE QUIERE UN EJERCICIO EN PARTICULAR
         if (ejercicioFisicosID != null)
@@ -172,6 +186,17 @@ public class EjerciciosFisicosController : Controller
         foreach (var ejercicioFisico in ejerciciosFisicos)
         {
             var tipoEjercicio = tiposEjercicios.Where(t => t.TipoEjercicioID == ejercicioFisico.TipoEjercicioID).Single();
+            var deportista = deportistas.Where(d => d.UsuarioID == usuarioLogueado).Single();
+            decimal caloriasQuemadas = 0;
+
+            if (deportista.Genero == Genero.Masculino)
+            {
+                caloriasQuemadas = ejercicioFisico.TipoEjercicio.NroMET * deportista.Peso * (decimal)ejercicioFisico.IntervaloEjercicio.TotalHours;
+            }
+            else
+            {
+                caloriasQuemadas = ejercicioFisico.TipoEjercicio.NroMET * deportista.Peso * (decimal)ejercicioFisico.IntervaloEjercicio.TotalHours * 0.9m;
+            }
 
             var ejercicioFisicoMostrar = new VistaEjercicioFisico
             {
@@ -186,7 +211,8 @@ public class EjerciciosFisicosController : Controller
                 LugarID = ejercicioFisico.LugarID,
                 LugarNombre = ejercicioFisico.Lugar.Nombre,
                 EventoDeportivoID = ejercicioFisico.EventoDeportivoID,
-                EventoDeportivoNombre = ejercicioFisico.EventoDeportivo.Nombre
+                EventoDeportivoNombre = ejercicioFisico.EventoDeportivo.Nombre,
+                CaloriasQuemadas = caloriasQuemadas
             };
             ejerciciosFisicosMostrar.Add(ejercicioFisicoMostrar);
         }
@@ -296,6 +322,18 @@ public class EjerciciosFisicosController : Controller
 
         foreach (var listadoInforme in listadoInformeEjerciciosFisicos)
         {
+            var deportista = _context.Personas.Where(d => d.UsuarioID == usuarioLogueado).Single();
+            decimal caloriasQuemadas = 0;
+
+            if (deportista.Genero == Genero.Masculino)
+            {
+                caloriasQuemadas = listadoInforme.TipoEjercicio.NroMET * deportista.Peso * (decimal)listadoInforme.IntervaloEjercicio.TotalHours;
+            }
+            else
+            {
+                caloriasQuemadas = listadoInforme.TipoEjercicio.NroMET * deportista.Peso * (decimal)listadoInforme.IntervaloEjercicio.TotalHours * 0.9m;
+            }
+
             var tipoEjercicioMostrar = informeEjerciciosFisicosMostrar.Where(t => t.TipoEjercicioID == listadoInforme.TipoEjercicioID).SingleOrDefault();
             if (tipoEjercicioMostrar == null)
             {
@@ -320,7 +358,8 @@ public class EjerciciosFisicosController : Controller
                 Observaciones = listadoInforme.Observaciones,
                 IntervaloEjercicio = listadoInforme.IntervaloEjercicio,
                 LugarID = listadoInforme.LugarID,
-                LugarNombre = listadoInforme.Lugar.Nombre
+                LugarNombre = listadoInforme.Lugar.Nombre,
+                CaloriasQuemadas = caloriasQuemadas
             };
             tipoEjercicioMostrar.VistaEjercicioFisico.Add(vistaEjerciciosFisicos);
         };

@@ -1,18 +1,19 @@
 ﻿@{
-    ViewData["Title"] = "Tipo de Ejercicios";
+  ViewData["Title"] = "Tipo de Ejercicios";
 }
 
 <link rel="stylesheet" href="~/css/tipoEjercicios.css">
 
 <div class="text-center">
-    <h1 class="display-4 tituloEj mt-2">Tipos De Ejercicios</h1>
+  <h1 class="display-4 tituloEj mt-2">Tipos De Ejercicios</h1>
 </div>
 
 <!-- Button trigger modal -->
 <div class="mb-2">
-    <button type="button" onclick="NuevoRegistro()" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#ModalTipoEjercicio">
+  <button type="button" onclick="NuevoRegistro()" class="btn btn-danger" data-bs-toggle="modal"
+    data-bs-target="#ModalTipoEjercicio">
     <i class="fa-solid fa-plus"></i> Nuevo Registro
-    </button>
+  </button>
 </div>
 
 
@@ -26,16 +27,24 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-      <form>
-        <div>
-          <input type="hidden" id="IdEjercicios" value="0">
-          <label for="descripcion" class="form-label">Descripción</label>
-          <input type="text" class="form-control" id="descripcion" style="text-transform:uppercase" placeholder="Nombre de la actividad">
-        </div>
-      </form>
+        <form>
+          <div>
+            <input type="hidden" id="IdEjercicios" value="0">
+            <label for="descripcion" class="form-label">Descripción</label>
+            <input type="text" class="form-control" id="descripcion" style="text-transform:uppercase"
+              placeholder="Nombre de la actividad">
+
+            <!-- Weight -->
+            <div class="form-group mt-3">
+              <label class="bg-danger text-white p-1">MET</label>
+              <input type="number" id="MET" step="0.1" class="form-control" placeholder="Ejemplo: 70.5">
+            </div>
+          </div>
+        </form>
       </div>
       <div class="modal-footer">
-        <button type="button" onclick="LimpiarModal()" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" onclick="LimpiarModal()" class="btn btn-secondary"
+          data-bs-dismiss="modal">Cancelar</button>
         <button type="button" onclick="GuardarRegistro()" class="btn btn-primary">Guardar</button>
       </div>
     </div>
@@ -45,20 +54,19 @@
 
 
 <table class="table table-dark table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>Descripción</th>      
-            <th style="width: 150px"></i></th>
-            <th style="width: 150px"></th>
-        </tr>
-    </thead>
-    <tbody id="tbody-tipoejercicios"></tbody>
+  <thead>
+    <tr>
+      <th>Descripción</th>
+      <th>MET</th>
+      <th style="width: 150px"></i></th>
+      <th style="width: 150px"></th>
+    </tr>
+  </thead>
+  <tbody id="tbody-tipoejercicios"></tbody>
 </table>
 
 
 
-@section Scripts{
-    <script src="~/js/tipoejercicios1.0.0.js"></script>
+@section Scripts {
+  <script src="~/js/tipoejercicios1.0.0.js"></script>
 }
-
-

@@ -71,6 +71,7 @@ namespace ActividadFisica.Models
         public string? EstadoEmocionalFin { get; set; }
         public string? Observaciones { get; set; }
         public TimeSpan IntervaloEjercicio { get; set; }
+        public decimal CaloriasQuemadas {get; set;}
     }
 
     public class VistaSumaEjercicioFisico

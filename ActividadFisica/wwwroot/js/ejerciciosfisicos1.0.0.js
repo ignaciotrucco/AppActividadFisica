@@ -76,6 +76,7 @@ function ListadoEjerciciosFisicos() {
                     <td class="text-center">${ejerciciosFisicoMostrar.fechaFinString}</td>
                     <td class="text-center">${ejerciciosFisicoMostrar.estadoEmocionalFin}</td>
                     <td>${ejerciciosFisicoMostrar.observaciones}</td>
+                    <td class="text-center">${ejerciciosFisicoMostrar.caloriasQuemadas}</td>
                     <td class="text-center"><button type="button" class="btn btn-success" onclick="AbrirModalEditar(${ejerciciosFisicoMostrar.ejercicioFisicoID})"><i class="fa-solid fa-pen-to-square"></i></button></td>
                     <td class="text-center"><button type="button" class="btn btn-danger" onclick="EliminarEjercicio(${ejerciciosFisicoMostrar.ejercicioFisicoID})"><i class="fa-solid fa-trash"></i></button></td>
                 </tr>

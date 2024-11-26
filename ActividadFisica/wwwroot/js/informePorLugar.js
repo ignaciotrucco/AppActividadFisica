@@ -24,6 +24,7 @@ function ListadoInformeEjerciciosFisicosPorLugar() {
                     <td></td>
                     <td></td>
                     <td></td>
+                    <td></td>
                 </tr>`;
 
                 $.each(lugar.vistaEjercicios, function (index, ejercicio) {
@@ -35,6 +36,7 @@ function ListadoInformeEjerciciosFisicosPorLugar() {
                     <td class="text-center">${ejercicio.intervaloEjercicio}</td>
                     <td class="text-center">${ejercicio.tipoEjercicioDescripcion}</td>
                     <td class="text-center">${ejercicio.observaciones}</td>
+                    <td class="text-center">${ejercicio.caloriasQuemadas}</td>
                 </tr>`;
                 });
             });

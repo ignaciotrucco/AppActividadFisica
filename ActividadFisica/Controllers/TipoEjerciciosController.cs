@@ -4,6 +4,7 @@ using ActividadFisica.Models;
 using ActividadFisica.Data;
 using System.Reflection.Metadata;
 using Microsoft.AspNetCore.Authorization;
+using System.Globalization;
 
 namespace ActividadFisica.Controllers;
 
@@ -40,19 +41,20 @@ public class TipoEjerciciosController : Controller
 
     }
 
-    public JsonResult GuardarTipoEjercicios(int tipoEjercicioID, string descripcion)
+    public JsonResult GuardarTipoEjercicios(int tipoEjercicioID, string descripcion, string NroMET)
     {
 
-        //1- VERIFICAMOS SI REALMENTE INGRESO ALGUN CARACTER Y LA VARIABLE NO SEA NULL
-        // if (descripcion != null && descripcion != "")
-        // {
-        //     //INGRESA SI ESCRIBIO SI O SI
-        // }
+        //AGREGAR CULTURA ESPAÑOL ARGENTINA AL METODO
+        Thread.CurrentThread.CurrentCulture = new CultureInfo("es-AR");
 
-        // if (String.IsNullOrEmpty(descripcion) == false)
-        // {
-        //     //INGRESA SI ESCRIBIO SI O SI 
-        // }
+        //CONVERTIR PESO A DECIMAL POR SI EL USUARIO SELECCIONA UN .
+        string metString = NroMET;
+        if (!string.IsNullOrEmpty(metString))
+        {
+            metString = metString.Replace(".", ",");
+        }
+        Decimal metDecimal = new Decimal();
+        var validaPeso = Decimal.TryParse(metString, out metDecimal);
 
         string resultado = "";
 
@@ -74,7 +76,8 @@ public class TipoEjerciciosController : Controller
                     //GUARDAMOS NUEVO EJERCICIO
                     var nuevoEjercicio = new Tipo_Ejercicio
                     {
-                        Descripcion = descripcion
+                        Descripcion = descripcion,
+                        NroMET = metDecimal
                     };
 
                     _context.Add(nuevoEjercicio);
@@ -99,6 +102,7 @@ public class TipoEjerciciosController : Controller
                     {
                         //El elemento es correcto y podemos guardarlo
                         editarTipoEjercicio.Descripcion = descripcion;
+                        editarTipoEjercicio.NroMET = metDecimal;
                         _context.SaveChanges();
                         resultado = "El elemento ha sido modificado correctamente";
                     }
@@ -123,12 +127,12 @@ public class TipoEjerciciosController : Controller
 
         var existeEjercicio = _context.EjercicioFisico.Where(e => e.TipoEjercicioID == tipoEjercicioID).Count();
 
-        if(existeEjercicio == 0)
+        if (existeEjercicio == 0)
         {
-        var tipoEjercicio = _context.Tipo_Ejercicios.Find(tipoEjercicioID);
-        _context.Remove(tipoEjercicio);
-        _context.SaveChanges();
-        eliminado = true;
+            var tipoEjercicio = _context.Tipo_Ejercicios.Find(tipoEjercicioID);
+            _context.Remove(tipoEjercicio);
+            _context.SaveChanges();
+            eliminado = true;
         }
 
         return Json(eliminado);

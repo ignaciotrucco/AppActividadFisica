@@ -37,6 +37,18 @@ public class InformeGeneralController : Controller
         foreach (var ejercicio in ejercicios)
         {
 
+            var deportista = _context.Personas.Where(d => d.UsuarioID == usuarioLogueado).Single();
+
+            decimal caloriasQuemadas = 0;
+            if (deportista.Genero == Genero.Masculino)
+            {
+                caloriasQuemadas = ejercicio.TipoEjercicio.NroMET * deportista.Peso * (decimal)ejercicio.IntervaloEjercicio.TotalHours;
+            }
+            else
+            {
+                caloriasQuemadas = ejercicio.TipoEjercicio.NroMET * deportista.Peso * (decimal)ejercicio.IntervaloEjercicio.TotalHours * 0.9m;
+            }
+
             var eventoMostrar = EventoVista.FirstOrDefault(e => e.EventoDeportivoID == ejercicio.EventoDeportivoID);
 
             if (eventoMostrar == null)
@@ -76,14 +88,16 @@ public class InformeGeneralController : Controller
                 lugarMostrar.VistaTipoEjercicio.Add(tipoEjercicioMostrar);
             }
 
-            var ejerciciosFisicos = new VistaEjercicioFisico {
+            var ejerciciosFisicos = new VistaEjercicioFisico
+            {
                 EjercicioFisicoID = ejercicio.EjercicioFisicoID,
                 FechaInicioString = ejercicio.Inicio.ToString("dd/MM/yyyy, HH:mm"),
                 FechaFinString = ejercicio.Fin.ToString("dd/MM/yyyy, HH:mm"),
                 EstadoEmocionalInicio = Enum.GetName(typeof(EstadoEmocional), ejercicio.EstadoEmocionalInicio),
                 EstadoEmocionalFin = Enum.GetName(typeof(EstadoEmocional), ejercicio.EstadoEmocionalFin),
                 Observaciones = ejercicio.Observaciones,
-                IntervaloEjercicio = ejercicio.IntervaloEjercicio
+                IntervaloEjercicio = ejercicio.IntervaloEjercicio,
+                CaloriasQuemadas = caloriasQuemadas
             };
             tipoEjercicioMostrar.VistaEjercicioFisico.Add(ejerciciosFisicos);
         }
